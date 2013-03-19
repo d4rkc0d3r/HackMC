@@ -1,9 +1,12 @@
 package d4rk.mc;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Config {
 	protected String name = ""; 
@@ -30,13 +33,40 @@ public class Config {
 			while ((line = file.readLine()) != null) {
 				String[] str = line.split(":", 2);
 				if(str.length <= 1) continue;
-				cache.put(str[0], str[1]);
+				cache.put(str[0].trim(), str[1].trim());
 	        }
 			file.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
+	}
+	
+	public void save() {
+		save(name);
+	}
+	
+	public void save(String fileName) {
+		name = fileName;
+		File oFile = new File(fileName);
+		BufferedWriter file = null;
+		try {
+			file = new BufferedWriter(new FileWriter(oFile));
+			for(Entry<String, String> entry : cache.entrySet()) {
+				file.write(entry.getKey() + ":" + entry.getValue() + "\n");
+			}
+			file.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				file.close();
+			} catch(Exception e) {}
+		}
+	}
+	
+	public void set(String key, Object value) {
+		cache.put(key, String.valueOf(value));
 	}
 	
 	public int getInteger(String key) {

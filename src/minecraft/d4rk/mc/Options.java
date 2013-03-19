@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 
 import net.minecraft.src.GuiNewChat;
+import net.minecraft.src.TileEntitySignRenderer;
 
 import org.lwjgl.input.Keyboard;
 
@@ -15,8 +16,9 @@ public class Options extends Config {
 	public float blockReachDistCreative = 5.0F;
 	public float blockReachDistSurvival = 4.5F;
 	public double focusNearestMobMaxDist = 100.0F;
-	public int maxChatLines = 100;
+	public int maxChatLines = 200;
 	public String nextName = Hack.getHackDir() + "/config/hack.cfg";
+	public int signRenderDistance = 512;
 
 	public Options() {
 		name = Hack.getHackDir() + "/config/hack.cfg";
@@ -40,13 +42,15 @@ public class Options extends Config {
 		blockReachDistSurvival = getFloat("blockReachDistSurvival");
 		focusNearestMobMaxDist = getDouble("focusNearestMobMaxDist");
 		nextName = Hack.getHackDir() + "/config/" + getString("configName");
+		signRenderDistance = getInteger("signRenderDistance");
 
 		GuiNewChat.maxChatLines = maxChatLines;
+		TileEntitySignRenderer.setSignRenderDistance(signRenderDistance);
 
 		String keyBind = getString("loadKeyBindings");
 		if (!keyBind.isEmpty())
 			KeyMakro.load(keyBind);
 
-		ImproveChat.addToChatGui("Loaded " + fileName);
+		ImproveChat.addToChatGui("Loaded " + getString("configName"));
 	}
 }

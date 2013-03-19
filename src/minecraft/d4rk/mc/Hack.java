@@ -106,6 +106,7 @@ public class Hack {
 	
 	/**
 	 * This is only called on the actual click, its not a block damage event.
+	 * 
 	 * @return true if the event should be cancelled, false otherwise.
 	 */
 	public static boolean onBlockLeftClick(int x, int y, int z, int side) {
@@ -319,7 +320,8 @@ public class Hack {
 	
 	/**
 	 * Logs the String given as parameter to STDOUT.<br>
-	 * If a prefix like "[prefix] " exists, then it will also be saved to a file (prefix.log) with the current time stamp.
+	 * If a prefix like "[prefix] " exists, then it will also be saved to a file
+	 * (prefix.log) with the current time stamp.
 	 */
 	static public void log(String str) {
 		System.out.println(str);
@@ -358,11 +360,10 @@ public class Hack {
 	/**
 	 * Adds a String to the local chat GUI.
 	 * 
-	 * @deprecated Use ImproveChat.addToChatGui(str) instead.
+	 * @deprecated Use {@link ImproveChat#addToChatGui(String)} instead.
 	 */
 	static public void addChatMessage(String str) {
-		if(str == null) return;
-		if(mc.thePlayer != null)
+		if(mc.thePlayer != null && str != null)
 			mc.thePlayer.addChatMessage(str);
 	}
 	

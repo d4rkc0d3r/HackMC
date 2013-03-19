@@ -34,7 +34,7 @@ import d4rk.mc.util.Pair;
 
 public class ShopAnalyzer extends GuiScreen implements EventListener {
 	private HashSet<Shop> shopList = new HashSet();
-	private GuiTextField searchField;
+	private GuiTextField itemNameField;
 	private GuiTextField modeField;
 	private int guiLeft;
 	private int guiTop;
@@ -59,12 +59,12 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	@Override
 	public void initGui() {
 		buttonList.clear();
-		this.searchField = new GuiTextField(this.fontRenderer, width / 2 - 160, 20, 80, this.fontRenderer.FONT_HEIGHT);
-        this.searchField.setMaxStringLength(20);
-        this.searchField.setEnableBackgroundDrawing(true);
-        this.searchField.setVisible(true);
-        this.searchField.setTextColor(16777215);
-        this.searchField.setText(itemNameText);
+		this.itemNameField = new GuiTextField(this.fontRenderer, width / 2 - 160, 20, 80, this.fontRenderer.FONT_HEIGHT);
+        this.itemNameField.setMaxStringLength(20);
+        this.itemNameField.setEnableBackgroundDrawing(true);
+        this.itemNameField.setVisible(true);
+        this.itemNameField.setTextColor(16777215);
+        this.itemNameField.setText(itemNameText);
         
 		this.modeField = new GuiTextField(this.fontRenderer, width / 2 - 160, 50, 80, this.fontRenderer.FONT_HEIGHT);
         this.modeField.setMaxStringLength(20);
@@ -95,28 +95,28 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
-		searchField.mouseClicked(par1, par2, par3);
+		itemNameField.mouseClicked(par1, par2, par3);
 		modeField.mouseClicked(par1, par2, par3);
 	}
 	
 	@Override
 	protected void keyTyped(char par1, int par2) {
 		if(par2 == 15) { // tab key was pressed
-			if(searchField.isFocused()) {
+			if(itemNameField.isFocused()) {
 				if(itemNameResultSet.size() > 0) {
-					searchField.setText(itemNameResultSet.iterator().next());
+					itemNameField.setText(itemNameResultSet.iterator().next());
 				}
 			} else if(modeField.isFocused()) {
-				searchField.setFocused(true);
+				itemNameField.setFocused(true);
 				modeField.setFocused(false);
 			} else {
 				modeField.setFocused(true);
 			}
 		}
 		
-		if(searchField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2) || par2 == 15) {
+		if(itemNameField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2) || par2 == 15) {
 			modeText = modeField.getText();
-			itemNameText = searchField.getText();
+			itemNameText = itemNameField.getText();
 			updateResult();
 		}
 		super.keyTyped(par1, par2);
@@ -127,7 +127,7 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 		drawDefaultBackground();
 		
 		drawString(fontRenderer, "Item Name", width / 2 - 160, 8, 16777215);
-		searchField.drawTextBox();
+		itemNameField.drawTextBox();
 		
 		drawString(fontRenderer, "Mode", width / 2 - 160, 38, 16777215);
 		modeField.drawTextBox();
@@ -149,7 +149,7 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 				}
 				int i = 0;
 				for(String s : itemNameResultSet) {
-					drawString(fontRenderer, s, width / 2 - 160, 86 + i*12, 16777215);
+					drawString(fontRenderer, s, width / 2 - 160, 86 + i * 12, 16777215);
 					++i;
 				}
 			}
@@ -162,76 +162,6 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
-	
-	protected void drawTooltip(List<String> list, int par2, int par3)
-    {
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        List var4 = list;
-
-        if (!var4.isEmpty())
-        {
-            int var5 = 0;
-            int var6;
-            int var7;
-
-            for (var6 = 0; var6 < var4.size(); ++var6)
-            {
-                var7 = this.fontRenderer.getStringWidth((String)var4.get(var6));
-
-                if (var7 > var5)
-                {
-                    var5 = var7;
-                }
-            }
-
-            var6 = par2 + 3;
-            var7 = par3 - 7;
-            int var9 = 8;
-
-            if (var4.size() > 1)
-            {
-                var9 += 2 + (var4.size() - 1) * 10;
-            }
-
-            if (this.guiTop + var7 + var9 + 6 > this.height)
-            {
-                var7 = this.height - var9 - this.guiTop - 6;
-            }
-
-            this.zLevel = 300.0F;
-            int var10 = -267386864;
-            this.drawGradientRect(var6 - 3, var7 - 4, var6 + var5 + 3, var7 - 3, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 3, var6 + var5 + 3, var7 + var9 + 4, var10, var10);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 - 4, var7 - 3, var6 - 3, var7 + var9 + 3, var10, var10);
-            this.drawGradientRect(var6 + var5 + 3, var7 - 3, var6 + var5 + 4, var7 + var9 + 3, var10, var10);
-            int var11 = 1347420415;
-            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
-            this.drawGradientRect(var6 - 3, var7 - 3 + 1, var6 - 3 + 1, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 + var5 + 2, var7 - 3 + 1, var6 + var5 + 3, var7 + var9 + 3 - 1, var11, var12);
-            this.drawGradientRect(var6 - 3, var7 - 3, var6 + var5 + 3, var7 - 3 + 1, var11, var11);
-            this.drawGradientRect(var6 - 3, var7 + var9 + 2, var6 + var5 + 3, var7 + var9 + 3, var12, var12);
-
-            for (int var13 = 0; var13 < var4.size(); ++var13)
-            {
-                String var14 = (String)var4.get(var13);
-
-                this.fontRenderer.drawStringWithShadow(var14, var6, var7, -1);
-
-                if (var13 == 0)
-                {
-                    var7 += 2;
-                }
-
-                var7 += 10;
-            }
-
-            this.zLevel = 0.0F;
-        }
-    }
 	
 	private void clearResult() {
 		viewResult.clear();
@@ -388,4 +318,72 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 			}
 		}
 	}
+	
+	protected void drawTooltip(List<String> list, int x, int y)
+    {
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        if (!list.isEmpty())
+        {
+            int width = 0;
+            int posX;
+            int posY;
+
+            for (posX = 0; posX < list.size(); ++posX)
+            {
+                posY = this.fontRenderer.getStringWidth(list.get(posX));
+
+                if (posY > width)
+                {
+                    width = posY;
+                }
+            }
+
+            posX = x + 3;
+            posY = y - 7;
+            int height = 8;
+
+            if (list.size() > 1)
+            {
+                height += 2 + (list.size() - 1) * 10;
+            }
+
+            if (this.guiTop + posY + height + 6 > this.height)
+            {
+                posY = this.height - height - this.guiTop - 6;
+            }
+
+            this.zLevel = 300.0F;
+            int var10 = -267386864;
+            this.drawGradientRect(posX - 3, posY - 4, posX + width + 3, posY - 3, var10, var10);
+            this.drawGradientRect(posX - 3, posY + height + 3, posX + width + 3, posY + height + 4, var10, var10);
+            this.drawGradientRect(posX - 3, posY - 3, posX + width + 3, posY + height + 3, var10, var10);
+            this.drawGradientRect(posX - 4, posY - 3, posX - 3, posY + height + 3, var10, var10);
+            this.drawGradientRect(posX + width + 3, posY - 3, posX + width + 4, posY + height + 3, var10, var10);
+            int var11 = 1347420415;
+            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
+            this.drawGradientRect(posX - 3, posY - 3 + 1, posX - 3 + 1, posY + height + 3 - 1, var11, var12);
+            this.drawGradientRect(posX + width + 2, posY - 3 + 1, posX + width + 3, posY + height + 3 - 1, var11, var12);
+            this.drawGradientRect(posX - 3, posY - 3, posX + width + 3, posY - 3 + 1, var11, var11);
+            this.drawGradientRect(posX - 3, posY + height + 2, posX + width + 3, posY + height + 3, var12, var12);
+
+            for (int var13 = 0; var13 < list.size(); ++var13)
+            {
+                String var14 = (String)list.get(var13);
+
+                this.fontRenderer.drawStringWithShadow(var14, posX, posY, -1);
+
+                if (var13 == 0)
+                {
+                    posY += 2;
+                }
+
+                posY += 10;
+            }
+
+            this.zLevel = 0.0F;
+        }
+    }
 }
