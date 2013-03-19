@@ -1,60 +1,6 @@
 package d4rk.mc;
 
-public class ChestShop {
-	private BlockWrapper block;
-	private String userName;
-	private int count;
-	private double priceBuy = -1;
-	private double priceSell = -1;
-	private boolean isBuy;
-	private boolean isSell;
-	private String itemName;
-	private String toString = null;
-
-	private ChestShop(BlockWrapper block) {
-		this.block = block;
-	}
-	
-	public BlockWrapper getBlock() {
-		return block;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public boolean isBuy() {
-		return isBuy;
-	}
-
-	public boolean isSell() {
-		return isSell;
-	}
-	
-	public double getPriceBuy() {
-		return priceBuy;
-	}
-
-	public double getPriceSell() {
-		return priceSell;
-	}
-	
-	public double getSinglePriceBuy() {
-		return priceBuy / count;
-	}
-	
-	public double getSinglePriceSell() {
-		return priceSell / count;
-	}
-
-	public String getItemName() {
-		return itemName;
-	}
-	
+public class ChestShop extends Shop {
 	public static ChestShop parse(BlockWrapper block) {
 		if (!block.isSign()
 				|| block.getSignLine(0).isEmpty()
@@ -64,7 +10,8 @@ public class ChestShop {
 				|| !(block.getSignLine(2).startsWith("S") || block.getSignLine(2).startsWith("B")))
 			return null;
 		
-		ChestShop shop = new ChestShop(block);
+		ChestShop shop = new ChestShop();
+		shop.block = block;
 		shop.userName = block.getSignLine(0);
 		try {
 			shop.count = Integer.valueOf(block.getSignLine(1));
@@ -95,32 +42,5 @@ public class ChestShop {
 		}
 		
 		return shop;
-	}
-	
-	@Override
-	public String toString() {
-		if(toString == null) {
-			toString = "[" + userName
-					+ " | " + itemName
-					+ " | " + count
-					+ " | " + String.format("B:%.2f", priceBuy).replace(",00", "")
-					+ " | " + String.format("S:%.2f", priceSell).replace(",00", "")
-					+ " | " + block + "]";
-		}
-		return toString;
-	}
-	
-	@Override
-	public int hashCode() {
-		return block.hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		try {
-			return ((ChestShop)obj).block.equals(block);
-		} catch(Exception e) {
-			return false;
-		}
 	}
 }

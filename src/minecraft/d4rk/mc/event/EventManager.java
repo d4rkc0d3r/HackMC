@@ -92,7 +92,7 @@ public class EventManager {
 		registerEvents(new GMParser());
 		registerEvents(new GMLogger());
 		registerEvents(new AutoHierWohntSign());
-		registerEvents(new ChestShopAnalyzer());
+		registerEvents(new ShopAnalyzer());
 		registerEvents(new ParticelMarker());
 	}
 
