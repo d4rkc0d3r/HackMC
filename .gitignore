@@ -52,33 +52,9 @@ temp/
 
 # files
 CHANGELOG
-cleanup.bat
-cleanup.sh
-decompile.bat
-decompile.sh
-getchangedsrc.bat
-getchangedsrc.sh
+*.bat
+*.sh
 LICENSE.txt
-recompile.bat
-recompile.sh
-reformat.bat
-reformat.sh
-reobfuscate.bat
-reobfuscate.sh
-reobfuscate_srg.bat
-reobfuscate_srg.sh
-startclient.bat
-startclient.sh
-startserver.bat
-startserver.sh
-updateids.bat
-updateids.sh
-updatemcp.bat
-updatemcp.sh
-updatemd5.bat
-updatemd5.sh
-updatenames.bat
-updatenames.sh
 
 #################
 ## Visual Studio

@@ -56,6 +56,8 @@ public class GuiEditSign extends GuiScreen
         }
 
         this.entitySign.setEditable(true);
+        
+        ItemSign.lastText = entitySign.signText.clone();
     }
 
     /**

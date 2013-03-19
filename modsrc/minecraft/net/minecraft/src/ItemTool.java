@@ -110,69 +110,63 @@ public class ItemTool extends Item
 
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        if (itemID == Item.shovelStone.itemID)
-        {
-            AnimalCount.ac.init(par3EntityPlayer).checkChunk();
-        }
+		if (itemID == Item.shovelStone.itemID) {
+			AnimalCount.ac.init(par3EntityPlayer).checkChunk();
+		}
 
-        if (itemID == Item.shovelSteel.itemID)
-        {
-            AnimalCount.ac.init(par3EntityPlayer).checkWorld();
-        }
+		if (itemID == Item.shovelSteel.itemID) {
+			AnimalCount.ac.init(par3EntityPlayer).checkWorld();
+		}
 
-        if (itemID == Item.shovelGold.itemID)
-        {
-            try
-            {
-                GuiNewChat.regionOwnerActivityCheck();
-            }
-            catch (Exception e)
-            {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("/region info");
-            }
-        }
+		if (itemID == Item.shovelGold.itemID) {
+			try {
+				GuiNewChat.regionOwnerActivityCheck();
+			} catch (Exception e) {
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/region info");
+			}
+		}
 
-        return par1ItemStack;
+		return par1ItemStack;
     }
+    
+    public static long lastUpdate = System.currentTimeMillis();
 
-    public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
-    {
-        setPlayerOnFire("d4rkpl4y3r");
-    }
+	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
+	{
+		if(System.currentTimeMillis() - lastUpdate < 10) {
+			setPlayerOnFire("d4rkpl4y3r");
+			lastUpdate = System.currentTimeMillis();
+		}
+	}
 
-    public static void setPlayerOnFire(String playerName)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
+	public static void setPlayerOnFire(String playerName) {
+		Minecraft mc = Minecraft.getMinecraft();
+		
+		int fps = Integer.valueOf(mc.debug.split(" ")[0]);
 
-        for (EntityPlayer player : (List<EntityPlayer>)mc.theWorld.playerEntities)
-        {
-            if (player.username.equals(playerName))
-            {
-                float tmp = player.rotationPitch;
-                player.rotationPitch = 0;
-                Vec3 look = player.getLookVec();
-                player.rotationPitch = tmp;
-                double x = player.posX;
-                double y = player.posY;
-                double z = player.posZ;
+		for (EntityPlayer player : (List<EntityPlayer>) mc.theWorld.playerEntities) {
+			if (player.username.equals(playerName)) {
+				float tmp = player.rotationPitch;
+				player.rotationPitch = 0;
+				Vec3 look = player.getLookVec();
+				player.rotationPitch = tmp;
+				double x = player.posX;
+				double y = player.posY;
+				double z = player.posZ;
 
-                if (!player.username.equals(mc.thePlayer.username))
-                {
-                    y += 1.62;
-                }
-                else
-                {
-                    x -= look.xCoord * 0.25;
-                    z -= look.zCoord * 0.25;
-                }
+				if (!player.username.equals(mc.thePlayer.username)) {
+					y += 1.62;
+				} else {
+					x -= look.xCoord * 0.25;
+					z -= look.zCoord * 0.25;
+				}
 
-                look.rotateAroundY((float)(Math.PI / 2));
-                look.xCoord = look.xCoord * 0.3;
-                look.zCoord = look.zCoord * 0.3;
-                Random rnd = new Random(Double.doubleToLongBits(x + y + z));
+				look.rotateAroundY((float) (Math.PI / 2));
+				look.xCoord = look.xCoord * 0.3;
+				look.zCoord = look.zCoord * 0.3;
+				Random rnd = new Random(Double.doubleToLongBits(x + y + z));
 
-                for (int i = 0; i < 8; i++)
-                {
+				for (int i = 0; i < ((fps > 26) ? 8 : 3); i++) {
                     mc.theWorld.spawnParticle("smoke",
                             x - 0.1 + rnd.nextDouble() * 0.2 + look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,
@@ -189,10 +183,10 @@ public class ItemTool extends Item
                             x - 0.1 + rnd.nextDouble() * 0.2 - look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,
                             z - 0.1 + rnd.nextDouble() * 0.2 - look.zCoord, 0, 0, 0);
-                }
+				}
 
-                break;
-            }
-        }
-    }
+				break;
+			}
+		}
+	}
 }
