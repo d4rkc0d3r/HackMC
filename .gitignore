@@ -41,6 +41,7 @@ lib/
 logs/
 reobf/
 runtime/
+modsrc/
 src/minecraft/argo/
 src/minecraft/net/
 src/minecraft/org/

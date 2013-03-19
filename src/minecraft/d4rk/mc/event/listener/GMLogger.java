@@ -11,30 +11,40 @@ import d4rk.mc.PlayerString;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.GlobalMessageEvent;
 
-public class GMLogger implements EventListener {
-	private boolean show = false;
+public class GMLogger implements EventListener
+{
+    private boolean show = false;
 
-	public GMLogger() {
-		lastInstance = this;
-	}
+    public GMLogger()
+    {
+        lastInstance = this;
+    }
 
-	public void onGM(GlobalMessageEvent e) {
-		String str = ChatColor.remove(e.toString());
-		if (show) {
-			System.out.println("[Global] " + str);
-		}
-		try {
-			Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/global.log", true));
-			output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
-			output.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public void onGM(GlobalMessageEvent e)
+    {
+        String str = ChatColor.remove(e.toString());
 
-	public static void showOnConsole(boolean show) {
-		lastInstance.show = show;
-	}
+        if (show)
+        {
+            System.out.println("[Global] " + str);
+        }
 
-	private static GMLogger lastInstance = new GMLogger();
+        try
+        {
+            Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/global.log", true));
+            output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
+            output.close();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void showOnConsole(boolean show)
+    {
+        lastInstance.show = show;
+    }
+
+    private static GMLogger lastInstance = new GMLogger();
 }

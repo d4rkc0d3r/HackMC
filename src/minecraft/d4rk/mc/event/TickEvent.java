@@ -1,5 +1,5 @@
 package d4rk.mc.event;
 
-public class TickEvent extends BaseEvent {
-	
+public class TickEvent extends BaseEvent
+{
 }
