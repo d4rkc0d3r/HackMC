@@ -22,153 +22,109 @@ import d4rk.mc.event.TickEvent;
 import d4rk.mc.inventory.Click;
 import d4rk.mc.inventory.Operation;
 
-public class InventoryHelper implements EventListener
-{
-    private PlayerWrapper pWrap = null;
-    private LinkedList<Operation> queue = new LinkedList();
-    private boolean processQueue = false;
-    private int inventoryType = -1;
+public class InventoryHelper implements EventListener {
+	private PlayerWrapper pWrap = null;
+	private LinkedList<Operation> queue = new LinkedList();
+	private boolean processQueue = false;
+	private int inventoryType = -1;
+	
+	public InventoryHelper() {
+		pWrap = Hack.getPlayerWrapper();
+		instance = this;
+	}
+	
+	public void onOpenInventory(PostProcessPacketEvent event) {
+		if(!(event.getPacket() instanceof Packet100OpenWindow))
+			return;
+		processQueue = true;
+		inventoryType = ((Packet100OpenWindow)event.getPacket()).inventoryType;
+	}
+	
+	public void onCloseInventory(PostSendPacketEvent event) {
+		if(!(event.getPacket() instanceof Packet101CloseWindow))
+			return;
+		processQueue = true;
+		inventoryType = -1;
+	}
+	
+	public void onTick(TickEvent event) {
+		if (!processQueue)
+			return;
 
-    public InventoryHelper()
-    {
-        pWrap = Hack.getPlayerWrapper();
-        instance = this;
-    }
+		try {
+			for (int i = 0; i < 1; i++) {
+				Operation op = queue.get(0);
 
-    public void onOpenInventory(PostProcessPacketEvent event)
-    {
-        if (!(event.getPacket() instanceof Packet100OpenWindow))
-        {
-            return;
-        }
+				if (!op.canDoOperation(inventoryType)) {
+					processQueue = false;
+					return;
+				}
 
-        processQueue = true;
-        inventoryType = ((Packet100OpenWindow)event.getPacket()).inventoryType;
-    }
+				op.doOperation();
 
-    public void onCloseInventory(PostSendPacketEvent event)
-    {
-        if (!(event.getPacket() instanceof Packet101CloseWindow))
-        {
-            return;
-        }
+				if (op.isDone())
+					queue.removeFirst();
+			}
+		} catch (IndexOutOfBoundsException e) {
+			processQueue = false;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			processQueue = false;
+		}
+	}
+	
+	public void addToQueue(Operation op) {
+		queue.addLast(op);
+		if(pWrap != null && pWrap.isOk())
+			op.setPlayerWrapper(pWrap);
+		processQueue = true;
+	}
 
-        processQueue = true;
-        inventoryType = -1;
-    }
+	public boolean selectBestToolForBlock(BlockWrapper block) { //TODO implement me
+		Block b = block.getBlock();
+		if(b == null)
+			return true;
 
-    public void onTick(TickEvent event)
-    {
-        if (!processQueue)
-        {
-            return;
-        }
+		List itemStacks = pWrap.player.openContainer.getInventory();
+		
+		for(int i = itemStacks.size()-1;i >= 0;i--) {
+			ItemStack item = (ItemStack) itemStacks.get(i);
+			if(item == null)
+				continue;
+			if(item.canHarvestBlock(b)) {
+				if(i >= itemStacks.size() - 9) { // is in the hotbar
+					pWrap.selectItem(item.getItem());
+					return true;
+				} else {
+					
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private void leftClickOn(int id) {
+		addToQueue(new Click(pWrap, inventoryType, id, 0, false));
+	}
+	
+	private void log(Object obj) {
+		Hack.log("[InventoryHelper] " + obj);
+	}
+	
+	public static void clearQueue() {
+		instance.queue.clear();
+		instance.processQueue = false;
+	}
+	
+	public static InventoryHelper getInstance(PlayerWrapper pWrap) {
+		instance.pWrap = pWrap;
+		return instance;
+	}
 
-        try
-        {
-            for (int i = 0; i < 1; i++)
-            {
-                Operation op = queue.get(0);
-
-                if (!op.canDoOperation(inventoryType))
-                {
-                    processQueue = false;
-                    return;
-                }
-
-                op.doOperation();
-
-                if (op.isDone())
-                {
-                    queue.removeFirst();
-                }
-            }
-        }
-        catch (IndexOutOfBoundsException e)
-        {
-            processQueue = false;
-        }
-        catch (NullPointerException e)
-        {
-            e.printStackTrace();
-            processQueue = false;
-        }
-    }
-
-    public void addToQueue(Operation op)
-    {
-        queue.addLast(op);
-
-        if (pWrap != null && pWrap.isOk())
-        {
-            op.setPlayerWrapper(pWrap);
-        }
-
-        processQueue = true;
-    }
-
-    public boolean selectBestToolForBlock(BlockWrapper block)   //TODO implement me
-    {
-        Block b = block.getBlock();
-
-        if (b == null)
-        {
-            return true;
-        }
-
-        List itemStacks = pWrap.player.openContainer.getInventory();
-
-        for (int i = itemStacks.size() - 1; i >= 0; i--)
-        {
-            ItemStack item = (ItemStack) itemStacks.get(i);
-
-            if (item == null)
-            {
-                continue;
-            }
-
-            if (item.canHarvestBlock(b))
-            {
-                if (i >= itemStacks.size() - 9)  // is in the hotbar
-                {
-                    pWrap.selectItem(item.getItem());
-                    return true;
-                }
-                else
-                {
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private void leftClickOn(int id)
-    {
-        addToQueue(new Click(pWrap, inventoryType, id, 0, false));
-    }
-
-    private void log(Object obj)
-    {
-        Hack.log("[InventoryHelper] " + obj);
-    }
-
-    public static void clearQueue()
-    {
-        instance.queue.clear();
-        instance.processQueue = false;
-    }
-
-    public static InventoryHelper getInstance(PlayerWrapper pWrap)
-    {
-        instance.pWrap = pWrap;
-        return instance;
-    }
-
-    public static InventoryHelper getInstance()
-    {
-        return getInstance(Hack.getPlayerWrapper());
-    }
-
-    private static InventoryHelper instance = null;
+	public static InventoryHelper getInstance() {
+		return getInstance(Hack.getPlayerWrapper());
+	}
+	
+	private static InventoryHelper instance = null;
 }

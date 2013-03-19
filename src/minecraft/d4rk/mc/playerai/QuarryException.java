@@ -1,29 +1,24 @@
 package d4rk.mc.playerai;
 
-public class QuarryException extends RuntimeException
-{
-    public QuarryException()
-    {
-    }
+public class QuarryException extends RuntimeException {
 
-    public QuarryException(String message)
-    {
-        super(message);
-    }
+	public QuarryException() {
+	}
 
-    public QuarryException(Throwable cause)
-    {
-        super(cause);
-    }
+	public QuarryException(String message) {
+		super(message);
+	}
 
-    public QuarryException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	public QuarryException(Throwable cause) {
+		super(cause);
+	}
 
-    public String getMessage()
-    {
-        String ret = super.getMessage();
-        return ret == null ? new String("(null)") : ret;
-    }
+	public QuarryException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public String getMessage() {
+		String ret = super.getMessage();
+		return ret == null ? new String("(null)") : ret;
+	}
 }

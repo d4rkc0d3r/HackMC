@@ -11,37 +11,26 @@ import d4rk.mc.event.ChatEvent;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.PlayerChatEvent;
 
-public class ChatLog implements EventListener
-{
-    public void onChatEvent(ChatEvent event)
-    {
-        String str = ChatColor.remove(event.getSrc());
-
-        try
-        {
-            Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/chat.log", true));
-            output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
-            output.close();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    public void onPlayerChatEvent(PlayerChatEvent event)
-    {
-        String str = ChatColor.remove(event.getSrc());
-
-        try
-        {
-            Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/send.log", true));
-            output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
-            output.close();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+public class ChatLog implements EventListener {
+	public void onChatEvent(ChatEvent event) {
+		String str = ChatColor.remove(event.getSrc());
+		try {
+			Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/chat.log", true));
+			output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
+			output.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void onPlayerChatEvent(PlayerChatEvent event) {
+		String str = ChatColor.remove(event.getSrc());
+		try {
+			Writer output = new BufferedWriter(new FileWriter(Hack.getHackDir() + "/log/send.log", true));
+			output.append(Hack.getCurrentDateAndTime() + " " + str + "\r\n");
+			output.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 }

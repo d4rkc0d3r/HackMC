@@ -2,20 +2,18 @@ package d4rk.mc.inventory;
 
 import d4rk.mc.PlayerWrapper;
 
-public class FillFurnace extends Operation
-{
-    public FillFurnace()
-    {
-        this(null);
-    }
+public class FillFurnace extends Operation {
 
-    public FillFurnace(PlayerWrapper pWrap)
-    {
-        super(pWrap, 2);
-    }
+	public FillFurnace() {
+		this(null);
+	}
 
-    @Override
-    public void doOperation()
-    {
-    }
+	public FillFurnace(PlayerWrapper pWrap) {
+		super(pWrap, 2);
+	}
+
+	@Override
+	public void doOperation() {
+		
+	}
 }

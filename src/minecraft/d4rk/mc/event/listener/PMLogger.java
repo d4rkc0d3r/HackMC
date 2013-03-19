@@ -13,39 +13,30 @@ import d4rk.mc.event.EventListener;
 import d4rk.mc.event.PrivateMessageEvent;
 import d4rk.mc.util.FileIO;
 
-public class PMLogger implements EventListener
-{
-    private boolean show = false;
+public class PMLogger implements EventListener {
+	private boolean show = false;
 
-    public PMLogger()
-    {
-        lastInstance = this;
-    }
+	public PMLogger() {
+		lastInstance = this;
+	}
 
-    public void onPM(PrivateMessageEvent e)
-    {
-        if (show)
-        {
-            System.out.println("[MSG] " + e);
-        }
+	public void onPM(PrivateMessageEvent e) {
+		if (show) {
+			System.out.println("[MSG] " + e);
+		}
+		try {
+			String name = (e.sender.equals(PlayerString.ME)) ? e.receiver.getName() : e.sender.getName();
+			Writer output = new BufferedWriter(FileIO.createWriter(Hack.getHackDir() + "/log/msg/" + name + ".log", true));
+			output.append(Hack.getCurrentDateAndTime() + " " + e + "\r\n");
+			output.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-        try
-        {
-            String name = (e.sender.equals(PlayerString.ME)) ? e.receiver.getName() : e.sender.getName();
-            Writer output = new BufferedWriter(FileIO.createWriter(Hack.getHackDir() + "/log/msg/" + name + ".log", true));
-            output.append(Hack.getCurrentDateAndTime() + " " + e + "\r\n");
-            output.close();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+	public static void showOnConsole(boolean show) {
+		lastInstance.show = show;
+	}
 
-    public static void showOnConsole(boolean show)
-    {
-        lastInstance.show = show;
-    }
-
-    private static PMLogger lastInstance = new PMLogger();
+	private static PMLogger lastInstance = new PMLogger();
 }
