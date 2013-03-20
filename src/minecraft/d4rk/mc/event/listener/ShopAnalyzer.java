@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -42,6 +43,8 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	private String modeText = "name";
 	private String itemNameText = "";
 	private List<String> possibleModes = new ArrayList();
+	private int inputGuiTop = 35;
+	private long lastOperationDuration = 0;
 	
 	private Set<String> itemNameResultSet = new TreeSet();
 	private List<String> viewResult = new ArrayList();
@@ -58,15 +61,14 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	
 	@Override
 	public void initGui() {
-		buttonList.clear();
-		this.itemNameField = new GuiTextField(this.fontRenderer, width / 2 - 160, 20, 80, this.fontRenderer.FONT_HEIGHT);
+		this.itemNameField = new GuiTextField(this.fontRenderer, width / 2 - 160, inputGuiTop, 80, this.fontRenderer.FONT_HEIGHT);
         this.itemNameField.setMaxStringLength(20);
         this.itemNameField.setEnableBackgroundDrawing(true);
         this.itemNameField.setVisible(true);
         this.itemNameField.setTextColor(16777215);
         this.itemNameField.setText(itemNameText);
         
-		this.modeField = new GuiTextField(this.fontRenderer, width / 2 - 160, 50, 80, this.fontRenderer.FONT_HEIGHT);
+		this.modeField = new GuiTextField(this.fontRenderer, width / 2 - 160, inputGuiTop + 30, 80, this.fontRenderer.FONT_HEIGHT);
         this.modeField.setMaxStringLength(20);
         this.modeField.setEnableBackgroundDrawing(true);
         this.modeField.setVisible(true);
@@ -83,14 +85,6 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	public void onGuiClosed() {
 		isGuiOpen = false;
         Keyboard.enableRepeatEvents(false);
-	}
-	
-	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		switch(par1GuiButton.id) {
-		default:
-			break;
-		}
 	}
 	
 	@Override
@@ -125,31 +119,32 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
+
+		drawString(fontRenderer, "Time needed: " + getTimeNeeded(), width / 2 - 160, 8, 16777215);
+		drawString(fontRenderer, "Total shop count: " + shopList.size(), width / 2, 8, 16777215);
 		
-		drawString(fontRenderer, "Item Name", width / 2 - 160, 8, 16777215);
+		drawString(fontRenderer, "Item Name", width / 2 - 160, inputGuiTop - 12, 16777215);
 		itemNameField.drawTextBox();
 		
-		drawString(fontRenderer, "Mode", width / 2 - 160, 38, 16777215);
+		drawString(fontRenderer, "Mode", width / 2 - 160, inputGuiTop + 18, 16777215);
 		modeField.drawTextBox();
 		
-		drawString(fontRenderer, ChatColor.YELLOW + "Shop count: " + shopList.size(), width / 2 - 160, 65, 16777215);
-		
 		if(!possibleModes.contains(modeField.getText().toLowerCase())) {
-			drawTooltip(possibleModes, width / 2 - 159, 71);
+			drawTooltip(possibleModes, width / 2 - 159, inputGuiTop + 51);
 		} else {
 			if(modeField.getText().equalsIgnoreCase("name")) {
 				int i = 0;
 				for(String s : itemNameResultSet) {
-					drawString(fontRenderer, s, width / 2 - 60 + (i % 3) * 75, 16 + (i / 3) * 12, 16777215);
+					drawString(fontRenderer, s, width / 2 - 65 + (i % 3) * 85, inputGuiTop - 12 + (i / 3) * 12, 16777215);
 					++i;
 				}
 			} else {
 				for(int i = 0; i < viewResult.size(); ++i) {
-					drawString(fontRenderer, viewResult.get(i), width / 2 - 60, 16 + i * 12, 16777215);
+					drawString(fontRenderer, viewResult.get(i), width / 2 - 60, inputGuiTop - 12 + i * 12, 16777215);
 				}
 				int i = 0;
 				for(String s : itemNameResultSet) {
-					drawString(fontRenderer, s, width / 2 - 160, 86 + i * 12, 16777215);
+					drawString(fontRenderer, s, width / 2 - 160, inputGuiTop + 50 + i * 12, 16777215);
 					++i;
 				}
 			}
@@ -168,6 +163,7 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	}
 	
 	private void updateResult() {
+		long startTime = System.nanoTime();
 		itemNameResultSet.clear();
 		for(Shop s : shopList) {
 			if(s.getItemName().toLowerCase().contains(itemNameText.toLowerCase())) {
@@ -176,7 +172,7 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 		}
         if(modeText.equalsIgnoreCase("buy") || modeText.equalsIgnoreCase("sell")) {
 			viewResult.clear();
-			count = 19;
+			count = 20;
 			addToResult(modeText);
 		} else if(modeText.equalsIgnoreCase("check")) {
 			viewResult.clear();
@@ -184,6 +180,7 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 			addToResult("buy");
 			addToResult("sell");
 		}
+        lastOperationDuration = (System.nanoTime() - startTime) / 1000;
 	}
 	
 	public void addToResult(String modeText) {
@@ -245,6 +242,24 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 						+ " from " + e.getSecond().getUserName());
 			}
 		}
+	}
+	
+	private String getTimeNeeded() {
+		String str = "" + lastOperationDuration;
+		
+		if(str.length() == 3) {
+			str = "0." + str;
+		} else if (str.length() == 2) {
+			str = "0.0" + str;
+		} else if (str.length() == 1) {
+			str = "0.00" + str;
+		} else if (str.length() == 0) {
+			str = "0";
+		} else {
+			str = str.substring(0, str.length() - 3) + "," + str.substring(str.length() - 3);
+		}
+		
+		return str + " ms";
 	}
 	
 	public void onSignUpdate(PostProcessPacketEvent event) {
