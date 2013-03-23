@@ -94,6 +94,7 @@ public class EventManager {
 		registerEvents(new AutoHierWohntSign());
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new ParticelMarker());
+		registerEvents(new McmmoGui());
 	}
 
 	private static boolean isSubClassOf(Class check, Class sup) {

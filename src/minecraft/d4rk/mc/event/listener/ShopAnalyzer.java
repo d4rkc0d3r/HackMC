@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -31,14 +30,13 @@ import d4rk.mc.event.CommandEvent;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
 import d4rk.mc.event.PostProcessPacketEvent;
+import d4rk.mc.gui.BasicGuiScreen;
 import d4rk.mc.util.Pair;
 
-public class ShopAnalyzer extends GuiScreen implements EventListener {
+public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	private HashSet<Shop> shopList = new HashSet();
 	private GuiTextField itemNameField;
 	private GuiTextField modeField;
-	private int guiLeft;
-	private int guiTop;
 	private boolean isGuiOpen = false;
 	private String modeText = "name";
 	private String itemNameText = "";
@@ -61,14 +59,14 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 	
 	@Override
 	public void initGui() {
-		this.itemNameField = new GuiTextField(this.fontRenderer, width / 2 - 160, inputGuiTop, 80, this.fontRenderer.FONT_HEIGHT);
+		this.itemNameField = new GuiTextField(fontRenderer, width / 2 - 160, inputGuiTop, 80, fontRenderer.FONT_HEIGHT);
         this.itemNameField.setMaxStringLength(20);
         this.itemNameField.setEnableBackgroundDrawing(true);
         this.itemNameField.setVisible(true);
         this.itemNameField.setTextColor(16777215);
         this.itemNameField.setText(itemNameText);
         
-		this.modeField = new GuiTextField(this.fontRenderer, width / 2 - 160, inputGuiTop + 30, 80, this.fontRenderer.FONT_HEIGHT);
+		this.modeField = new GuiTextField(fontRenderer, width / 2 - 160, inputGuiTop + 30, 80, fontRenderer.FONT_HEIGHT);
         this.modeField.setMaxStringLength(20);
         this.modeField.setEnableBackgroundDrawing(true);
         this.modeField.setVisible(true);
@@ -109,9 +107,11 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 		}
 		
 		if(itemNameField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2) || par2 == 15) {
-			modeText = modeField.getText();
-			itemNameText = itemNameField.getText();
-			updateResult();
+			if(!modeText.equals(modeField.getText()) || !itemNameText.equals(itemNameField.getText())) {
+				modeText = modeField.getText();
+				itemNameText = itemNameField.getText();
+				updateResult();
+			}
 		}
 		super.keyTyped(par1, par2);
 	}
@@ -333,72 +333,4 @@ public class ShopAnalyzer extends GuiScreen implements EventListener {
 			}
 		}
 	}
-	
-	protected void drawTooltip(List<String> list, int x, int y)
-    {
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-        if (!list.isEmpty())
-        {
-            int width = 0;
-            int posX;
-            int posY;
-
-            for (posX = 0; posX < list.size(); ++posX)
-            {
-                posY = this.fontRenderer.getStringWidth(list.get(posX));
-
-                if (posY > width)
-                {
-                    width = posY;
-                }
-            }
-
-            posX = x + 3;
-            posY = y - 7;
-            int height = 8;
-
-            if (list.size() > 1)
-            {
-                height += 2 + (list.size() - 1) * 10;
-            }
-
-            if (this.guiTop + posY + height + 6 > this.height)
-            {
-                posY = this.height - height - this.guiTop - 6;
-            }
-
-            this.zLevel = 300.0F;
-            int var10 = -267386864;
-            this.drawGradientRect(posX - 3, posY - 4, posX + width + 3, posY - 3, var10, var10);
-            this.drawGradientRect(posX - 3, posY + height + 3, posX + width + 3, posY + height + 4, var10, var10);
-            this.drawGradientRect(posX - 3, posY - 3, posX + width + 3, posY + height + 3, var10, var10);
-            this.drawGradientRect(posX - 4, posY - 3, posX - 3, posY + height + 3, var10, var10);
-            this.drawGradientRect(posX + width + 3, posY - 3, posX + width + 4, posY + height + 3, var10, var10);
-            int var11 = 1347420415;
-            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
-            this.drawGradientRect(posX - 3, posY - 3 + 1, posX - 3 + 1, posY + height + 3 - 1, var11, var12);
-            this.drawGradientRect(posX + width + 2, posY - 3 + 1, posX + width + 3, posY + height + 3 - 1, var11, var12);
-            this.drawGradientRect(posX - 3, posY - 3, posX + width + 3, posY - 3 + 1, var11, var11);
-            this.drawGradientRect(posX - 3, posY + height + 2, posX + width + 3, posY + height + 3, var12, var12);
-
-            for (int var13 = 0; var13 < list.size(); ++var13)
-            {
-                String var14 = (String)list.get(var13);
-
-                this.fontRenderer.drawStringWithShadow(var14, posX, posY, -1);
-
-                if (var13 == 0)
-                {
-                    posY += 2;
-                }
-
-                posY += 10;
-            }
-
-            this.zLevel = 0.0F;
-        }
-    }
 }

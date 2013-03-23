@@ -1,6 +1,7 @@
 package net.minecraft.client;
 
 import d4rk.mc.*;
+import d4rk.mc.event.listener.McmmoGui;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -1428,14 +1429,17 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
     {
         this.displayWidth = par1 <= 0 ? 1 : par1;
         this.displayHeight = par2 <= 0 ? 1 : par2;
+        
+        ScaledResolution var3 = new ScaledResolution(this.gameSettings, par1, par2);
+        int var4 = var3.getScaledWidth();
+        int var5 = var3.getScaledHeight();
 
         if (this.currentScreen != null)
         {
-            ScaledResolution var3 = new ScaledResolution(this.gameSettings, par1, par2);
-            int var4 = var3.getScaledWidth();
-            int var5 = var3.getScaledHeight();
             this.currentScreen.setWorldAndResolution(this, var4, var5);
         }
+        
+        McmmoGui.getInstance().setWorldAndResolution(this, var4, var5);
     }
 
     /**

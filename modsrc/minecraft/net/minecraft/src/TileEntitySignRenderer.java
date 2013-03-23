@@ -98,7 +98,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer
 
     public static void setSignRenderDistance(int i)
     {
-        checkDistance = i <= 128;
+        checkDistance = i <= 512;
         signRenderDistanceSq = i * i;
     }
 }
