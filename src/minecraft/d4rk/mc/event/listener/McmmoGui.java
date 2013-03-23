@@ -57,7 +57,7 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 	
 	public void onTickEvent(TickEvent event) {
 		long currentTime = System.currentTimeMillis();
-		if(currentTime - lastUpdate > 20000) {
+		if(currentTime - lastUpdate > 8000) {
 			lastUpdate = currentTime;
 			updateSkills();
 		}
@@ -78,14 +78,13 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 		}
 		
 		if(isUpdatingSkills) {
+			event.setDisabled(true);
 			McmmoSkill skill = McmmoSkill.parseMcStats(str);
 			if(skill != null) {
-				event.setDisabled(true);
 				updateSkill(skill);
 			} else {
 				if(str.startsWith("POWER LEVEL:") || str.startsWith("KRAFT LEVEL:")) {
 					try {
-						event.setDisabled(true);
 						isUpdatingSkills = false;
 						powerLevel = Integer.valueOf(str.split(":")[1].trim());
 					} catch(Exception e) {}
