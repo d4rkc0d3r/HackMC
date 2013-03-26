@@ -59,7 +59,7 @@ public class McmmoSkill {
 			if(split[1].startsWith("Skill um 1 gestiegen. Gesamt (") && !split[0].contains(":")) {
 				McmmoSkill s = new McmmoSkill();
 				s.name = split[0];
-				s.level = Integer.valueOf(str.substring(str.indexOf('(') + 1, str.length()));
+				s.level = Integer.valueOf(str.substring(str.indexOf('(') + 1, str.length() - 1));
 				s.currentExp = 0;
 				s.lvlUpExp = s.level * 20 + 1020;
 				return s;

@@ -5,11 +5,13 @@ import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.FontRenderer;
+import net.minecraft.src.Packet14BlockDig;
 
 import d4rk.mc.ChatColor;
 import d4rk.mc.McmmoSkill;
 import d4rk.mc.event.ChatEvent;
 import d4rk.mc.event.EventListener;
+import d4rk.mc.event.PostSendPacketEvent;
 import d4rk.mc.event.TickEvent;
 import d4rk.mc.gui.BasicGuiScreen;
 
@@ -17,17 +19,14 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 	private ArrayList<McmmoSkill> skills = new ArrayList();
 	private boolean isUpdatingSkills = false;
 	private boolean isWaitingForSkillUpdate = false;
+	private boolean needUpdate = true;
+	private boolean show = false;
 	private int powerLevel = 0;
 	private long lastUpdate = System.currentTimeMillis();
 
 	public McmmoGui() {
 		instance = this;
 		mc = Minecraft.getMinecraft();
-		isUpdatingSkills = true;
-		onChatEvent(new ChatEvent("Graben:15 XP(437/1,320)"));
-		onChatEvent(new ChatEvent("Pflanzenkunde:7 XP(268/1,160)"));
-		onChatEvent(new ChatEvent("Bergbau:0 XP(11/1,020)"));
-		onChatEvent(new ChatEvent("KRAFT LEVEL: 22"));
 	}
 	
 	@Override
@@ -41,6 +40,10 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 	}
 	
 	public void draw(FontRenderer r) {
+		if(!show) {
+			return;
+		}
+		
 		fontRenderer = r;
 
 		drawString(ChatColor.DARK_RED + "POWER LEVEL:", 8, 8);
@@ -57,9 +60,15 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 	
 	public void onTickEvent(TickEvent event) {
 		long currentTime = System.currentTimeMillis();
-		if(currentTime - lastUpdate > 8000) {
+		if(currentTime - lastUpdate > ((needUpdate) ? 5000 : 15000)) {
 			lastUpdate = currentTime;
 			updateSkills();
+		}
+	}
+	
+	public void onSendPacketEvent(PostSendPacketEvent event) {
+		if(event.getPacket() instanceof Packet14BlockDig) {
+			needUpdate = true;
 		}
 	}
 	
@@ -86,6 +95,8 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 				if(str.startsWith("POWER LEVEL:") || str.startsWith("KRAFT LEVEL:")) {
 					try {
 						isUpdatingSkills = false;
+						needUpdate = false;
+						show = true;
 						powerLevel = Integer.valueOf(str.split(":")[1].trim());
 					} catch(Exception e) {}
 				}
@@ -97,6 +108,8 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 		if(!isWaitingForSkillUpdate) {
 			isWaitingForSkillUpdate = true;
 			mc.thePlayer.sendChatMessage("/mcstats");
+		} else {
+			show = false;
 		}
 	}
 	
