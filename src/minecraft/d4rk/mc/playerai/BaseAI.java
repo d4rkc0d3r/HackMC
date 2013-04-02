@@ -29,10 +29,11 @@ public abstract class BaseAI {
 	}
 
 	public void toggle() {
-		if (isStopped)
+		if (isStopped) {
 			resume();
-		else
+		} else {
 			stop();
+		}
 	}
 
 	public void stop() {
@@ -55,8 +56,6 @@ public abstract class BaseAI {
 	}
 
 	/**
-	 * write if(this.runScriptParser()) return; at the first line of onTick();
-	 * 
 	 * @return true if the ScriptAI isn't finished yet, false otherwise.
 	 */
 	protected boolean runScriptParser() {
@@ -71,7 +70,12 @@ public abstract class BaseAI {
 	}
 
 	/**
-	 * write if(this.runScriptParser()) return; at the first line of onTick();
+	 * write the following at the first line of onTick():
+	 * <pre><code>
+	 * if(isStopped || runScriptParser()) {
+	 *     return;
+	 * }
+	 * </code></pre>
 	 */
 	public abstract void onTick();
 }

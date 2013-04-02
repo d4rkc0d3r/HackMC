@@ -90,8 +90,11 @@ public class PlayerWrapper {
 	}
 	
 	public boolean selectToolForBlock(BlockWrapper block) {
-		InventoryHelper.getInstance(this).addToQueue(new SelectBestToolForBlock(block));
-		return ((getCurrentItem() == null) ? new ItemStack(Block.dirt) : getCurrentItem()).canHarvestBlock(block.getBlock());
+		(new SelectBestToolForBlock(this, block)).doOperation();
+		return ((getCurrentItem() == null)
+				? new ItemStack(Block.dirt)
+				: getCurrentItem()).canHarvestBlock(block.getBlock())
+				|| block.getMaterial().isToolNotRequired();
 	}
 	
 	/**

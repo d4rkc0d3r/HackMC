@@ -83,7 +83,7 @@ public class Quarry {
 	}
 	
 	public void start() {
-		stair = getStair();
+		stair = calculateStaircaise();
 		
 //		for(BlockWrapper b : stair) {
 //			b.setID(Block.cloth.blockID); // white wool
@@ -103,8 +103,10 @@ public class Quarry {
 	/**
 	 * Calculates the stair case blocks and returns them in an array.
 	 */
-	private BlockWrapper[] getStair() {
-		if(from.x==to.x || from.z == to.z) return new BlockWrapper[0];
+	private BlockWrapper[] calculateStaircaise() {
+		if(from.x==to.x || from.z == to.z) {
+			return new BlockWrapper[0];
+		}
 		
 		ArrayList<BlockWrapper> result = new ArrayList<BlockWrapper>(this.getHeight());
 		
@@ -147,18 +149,19 @@ public class Quarry {
 		
 		int i = current;
 		while(i < content.length) {
-			if(i == -1)
+			if(i == -1) {
 				i = 0;
-			else if(i >= 0 && i < content.length-1 && content[i+1].y != content[i].y)
+			} else if(i >= 0 && i < content.length-1 && content[i+1].y != content[i].y) {
 				i+=1;
-			else if((w*xm-1) == ((i%(xm*zm))%(w*xm)))
+			} else if((w*xm-1) == ((i%(xm*zm))%(w*xm))) {
 				i+=1;
-			else if((i%(xm*zm))/xm == zm-1)
+			} else if((i%(xm*zm))/xm == zm-1) {
 				i-=((((i%(xm*zm))/xm) % w)*xm-1);
-			else if(((i%(xm*zm))/xm) % w < (w-1))
+			} else if(((i%(xm*zm))/xm) % w < (w-1)) {
 				i+=xm;
-			else
+			} else {
 				i-=((w-1)*xm-1);
+			}
 			
 			if(i>=0 && i<content.length && shouldBeMined(content[i])) {
 				current = i;
@@ -174,15 +177,15 @@ public class Quarry {
 	}
 	
 	public int getX() {
-		return Math.abs(from.x-to.x)+1;
+		return Math.abs(from.x - to.x) + 1;
 	}
-	
+
 	public int getZ() {
-		return Math.abs(from.z-to.z)+1;
+		return Math.abs(from.z - to.z) + 1;
 	}
-	
+
 	public int getHeight() {
-		return Math.abs(from.y-to.y)+1;
+		return Math.abs(from.y - to.y) + 1;
 	}
 	
 	public boolean isDone() {
@@ -194,6 +197,13 @@ public class Quarry {
 	 */
 	public void reset() {
 		current = -1;
+	}
+	
+	public void oneLayerUp() {
+		if(current == -1) {
+			return;
+		}
+		current = Math.max(-1, current - (getX() * getZ()));
 	}
 	
 	/**

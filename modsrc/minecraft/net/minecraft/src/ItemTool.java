@@ -133,7 +133,7 @@ public class ItemTool extends Item
 
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
 	{
-		if(System.currentTimeMillis() - lastUpdate < 10) {
+		if(System.currentTimeMillis() - lastUpdate > 10) {
 			setPlayerOnFire("d4rkpl4y3r");
 			lastUpdate = System.currentTimeMillis();
 		}
@@ -149,6 +149,8 @@ public class ItemTool extends Item
 				float tmp = player.rotationPitch;
 				player.rotationPitch = 0;
 				Vec3 look = player.getLookVec();
+				look.yCoord = 0;
+				look = look.normalize();
 				player.rotationPitch = tmp;
 				double x = player.posX;
 				double y = player.posY;

@@ -152,7 +152,5 @@ public class SelectBestToolForBlock extends Operation {
 		shouldUseFortuneList.add(Block.carrot.blockID);
 		shouldUseFortuneList.add(Block.potato.blockID);
 		shouldUseFortuneList.add(Block.netherStalk.blockID);
-		
-		shouldUseFortuneList.add(Block.gravel.blockID);
 	}
 }
