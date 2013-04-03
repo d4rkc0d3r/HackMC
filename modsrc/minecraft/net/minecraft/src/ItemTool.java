@@ -147,20 +147,24 @@ public class ItemTool extends Item
 		for (EntityPlayer player : (List<EntityPlayer>) mc.theWorld.playerEntities) {
 			if (player.username.equals(playerName)) {
 				float tmp = player.rotationPitch;
+				double yCoord = player.getLookVec().yCoord;
 				player.rotationPitch = 0;
 				Vec3 look = player.getLookVec();
-				look.yCoord = 0;
-				look = look.normalize();
 				player.rotationPitch = tmp;
 				double x = player.posX;
 				double y = player.posY;
 				double z = player.posZ;
+				double sx = -look.xCoord * 0.03;
+				double sz = -look.zCoord * 0.03;
 
 				if (!player.username.equals(mc.thePlayer.username)) {
 					y += 1.62;
 				} else {
-					x -= look.xCoord * 0.25;
-					z -= look.zCoord * 0.25;
+					y -= 1.6;
+					x -= look.xCoord * ((yCoord < 0) ? (-yCoord) : 0);
+					z -= look.zCoord * ((yCoord < 0) ? (-yCoord) : 0);
+					look.xCoord *= 0.6;
+					look.zCoord *= 0.6;
 				}
 
 				look.rotateAroundY((float) (Math.PI / 2));
@@ -168,11 +172,11 @@ public class ItemTool extends Item
 				look.zCoord = look.zCoord * 0.3;
 				Random rnd = new Random(Double.doubleToLongBits(x + y + z));
 
-				for (int i = 0; i < ((fps > 26) ? 8 : 3); i++) {
+				for (int i = 0; i < ((fps > 40) ? 5 : 2); i++) {
                     mc.theWorld.spawnParticle("smoke",
                             x - 0.1 + rnd.nextDouble() * 0.2 + look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,
-                            z - 0.1 + rnd.nextDouble() * 0.2 + look.zCoord, 0, 0, 0);
+                            z - 0.1 + rnd.nextDouble() * 0.2 + look.zCoord, sx, 0, sz);
                     mc.theWorld.spawnParticle("flame",
                             x - 0.1 + rnd.nextDouble() * 0.2 + look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,
@@ -180,7 +184,7 @@ public class ItemTool extends Item
                     mc.theWorld.spawnParticle("smoke",
                             x - 0.1 + rnd.nextDouble() * 0.2 - look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,
-                            z - 0.1 + rnd.nextDouble() * 0.2 - look.zCoord, 0, 0, 0);
+                            z - 0.1 + rnd.nextDouble() * 0.2 - look.zCoord, sx, 0, sz);
                     mc.theWorld.spawnParticle("flame",
                             x - 0.1 + rnd.nextDouble() * 0.2 - look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,

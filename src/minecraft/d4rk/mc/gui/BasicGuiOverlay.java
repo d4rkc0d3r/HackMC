@@ -1,0 +1,39 @@
+package d4rk.mc.gui;
+
+import java.util.List;
+
+public abstract class BasicGuiOverlay extends BasicGui {
+	/*
+	 * Need with/height and the position for the overlay manager to put them in the right corner.
+	 */
+	protected int width = 0;
+	protected int height = 0;
+	protected boolean isPersistent = false;
+	protected boolean isVisible = false;
+
+	public BasicGuiOverlay() {
+		super();
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public boolean isPersistent() {
+		return isPersistent;
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	
+	public abstract String getName();
+}

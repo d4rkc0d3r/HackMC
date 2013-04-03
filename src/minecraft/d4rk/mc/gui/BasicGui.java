@@ -5,15 +5,22 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 
 public abstract class BasicGui extends Gui {
-
+	protected Minecraft mc;
 	protected FontRenderer fontRenderer;
 
 	public BasicGui(FontRenderer fontRenderer) {
 		this.fontRenderer = fontRenderer;
+		this.mc = Minecraft.getMinecraft();
+	}
+
+	public BasicGui() {
+		this.mc = Minecraft.getMinecraft();
+		this.fontRenderer = mc.fontRenderer;
 	}
 	
 	protected void drawTooltip(List<String> list, int x, int y)

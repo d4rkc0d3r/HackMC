@@ -54,6 +54,8 @@ public class QuarryAI extends BaseAI {
 			lastY = current.y;
 		}
 		
+		//TODO: if inventory is full then deposit stuff in a chest if he has one in the hotbar
+		
 		startScript(new String[] {
 			"nolog: pathto " + current.getPositionString() + " 3.5",
 			"nolog: mineblock " + current.getString()
