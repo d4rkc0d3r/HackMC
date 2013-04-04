@@ -124,6 +124,11 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 			skills.get(index).setValues(skill);
 		}
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 	
 	public static McmmoGui getInstance() {
 		return instance;

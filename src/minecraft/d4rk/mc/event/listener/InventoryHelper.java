@@ -111,6 +111,11 @@ public class InventoryHelper implements EventListener {
 	private void log(Object obj) {
 		Hack.log("[InventoryHelper] " + obj);
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 	
 	public static void clearQueue() {
 		instance.queue.clear();

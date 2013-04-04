@@ -28,4 +28,9 @@ public class CommandParser implements EventListener {
 		EventManager.fireEvent(cmd);
 		e.setDisabled(cmd.isDisabled());
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

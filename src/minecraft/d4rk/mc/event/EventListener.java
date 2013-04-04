@@ -8,4 +8,6 @@ package d4rk.mc.event;
  * Also you have to register your listener with:<br>
  * {@link EventManager#registerEvents(EventListener)}
  */
-public interface EventListener {}
+public interface EventListener {
+	public abstract boolean isDestroyed();
+}

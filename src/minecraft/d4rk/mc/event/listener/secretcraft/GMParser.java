@@ -27,4 +27,9 @@ public class GMParser implements EventListener {
 			return null;
 		}
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

@@ -333,4 +333,9 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 			}
 		}
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

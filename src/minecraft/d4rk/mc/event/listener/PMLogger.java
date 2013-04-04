@@ -39,4 +39,9 @@ public class PMLogger implements EventListener {
 	}
 
 	private static PMLogger lastInstance = new PMLogger();
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

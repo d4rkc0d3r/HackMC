@@ -33,7 +33,12 @@ public class EventManager {
 			return ((DisableEvent) event).isDisabled();
 		if (l == null)
 			return false;
-		for (Pair<EventListener, Method> p : l) {
+		for (int i = 0; i < l.size(); ++i) {
+			Pair<EventListener, Method> p = l.get(i);
+			if(p.getFirst().isDestroyed()) {
+				l.remove(i--);
+				continue;
+			}
 			try {
 				p.getSecond().invoke(p.getFirst(), event);
 			} catch (IllegalAccessException e) {
@@ -59,31 +64,33 @@ public class EventManager {
 	public static void registerEvents(EventListener listener) {
 		Method[] methods = listener.getClass().getMethods();
 		for (Method m : methods) {
-			Class<?>[] params = m.getParameterTypes();
-			if (params.length != 1)
-				continue;
-			if (params[0].getName().startsWith("["))
-				continue;
-			if (!isSubClassOf(params[0], BaseEvent.class))
-				continue;
-
-			List l = map.get(params[0]);
-			if (l == null) {
-				l = new ArrayList<Pair<EventListener, Method>>();
-				map.put(params[0], l);
-			}
-			Hack.logToFile("[EventManager] Successfully registered '"
-					+ afterLastDot(listener.getClass().getName()) + "."
-					+ m.getName() + "(" + afterLastDot(params[0].getName())
-					+ ")'");
-			l.add(new Pair(listener, m));
+			registerMethod(listener, m);
 		}
 	}
+	
+	public static boolean registerMethod(EventListener listener, Method m) {
+		Class<?>[] params = m.getParameterTypes();
+		if (params.length != 1 || params[0].getName().startsWith("[")
+				|| !isSubClassOf(params[0], BaseEvent.class)) {
+			return false;
+		}
+	
+		List l = map.get(params[0]);
+		if (l == null) {
+			l = new ArrayList<Pair<EventListener, Method>>();
+			map.put(params[0], l);
+		}
+		l.add(new Pair(listener, m));
+		Hack.logToFile("[EventManager] Successfully registered '"
+				+ afterLastDot(listener.getClass().getName()) + "."
+				+ m.getName() + "(" + afterLastDot(params[0].getName())
+				+ ")'");
+		return true;
+	}
 
-	public static void reloadListeners() {
+	public static void loadBasicListeners() {
 		map.clear();
 
-		// TODO: dynamically loading listeners from a file containing classpaths
 		registerEvents(new InventoryHelper());
 		registerEvents(new CommandParser());
 		registerEvents(new PMParser());
@@ -91,6 +98,7 @@ public class EventManager {
 		registerEvents(new PMLogger());
 		registerEvents(new GMParser());
 		registerEvents(new GMLogger());
+		registerEvents(new ChatLogger());
 		registerEvents(new AutoHierWohntSign());
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new ParticelMarker());

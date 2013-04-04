@@ -37,4 +37,9 @@ public class GMLogger implements EventListener {
 	}
 
 	private static GMLogger lastInstance = new GMLogger();
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

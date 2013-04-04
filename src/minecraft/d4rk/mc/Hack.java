@@ -87,7 +87,7 @@ public class Hack {
 		KeyMakro.load("default");
 		ImproveChat.setMSGFormat("[? -> mir] ");
 		ImproveChat.setSendFormat("[mir -> ?] ");
-		EventManager.reloadListeners();
+		EventManager.loadBasicListeners();
 	}
 	
 	/**

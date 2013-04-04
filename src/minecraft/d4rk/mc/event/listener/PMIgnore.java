@@ -64,4 +64,9 @@ public class PMIgnore implements EventListener {
 	}
 
 	private static PMIgnore lastInstance = null;
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

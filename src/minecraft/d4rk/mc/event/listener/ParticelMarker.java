@@ -62,6 +62,11 @@ public class ParticelMarker implements EventListener {
 		}
 	}
 
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
+
 	public static ParticelMarker getInstance() {
 		return instance;
 	}

@@ -65,4 +65,10 @@ public class PMParser implements EventListener {
 		
 		return null;
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

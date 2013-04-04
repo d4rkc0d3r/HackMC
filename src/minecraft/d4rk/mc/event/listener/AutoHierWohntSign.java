@@ -22,4 +22,9 @@ public class AutoHierWohntSign implements EventListener {
 				lines[i] = lines[i].substring(0, 15);
 		ItemSign.lastText = lines.clone();
 	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
 }

@@ -11,7 +11,7 @@ import d4rk.mc.event.ChatEvent;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.PlayerChatEvent;
 
-public class ChatLog implements EventListener {
+public class ChatLogger implements EventListener {
 	public void onChatEvent(ChatEvent event) {
 		String str = ChatColor.remove(event.getSrc());
 		try {
@@ -32,5 +32,10 @@ public class ChatLog implements EventListener {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
 	}
 }
