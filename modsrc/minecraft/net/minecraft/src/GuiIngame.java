@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import d4rk.mc.event.listener.McmmoGui;
+import d4rk.mc.gui.OverlayManager;
 
 public class GuiIngame extends Gui
 {
@@ -434,6 +435,12 @@ public class GuiIngame extends Gui
             var8.drawStringWithShadow(var35, var6 - var12 - 10, 5, 16777215);
             this.mc.mcProfiler.endSection();
         }
+        
+        mc.mcProfiler.startSection("OverlayManager");
+        GL11.glPushMatrix();
+        OverlayManager.getInstance().draw(var6, var7);
+        GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
         
         if (!this.mc.gameSettings.showDebugInfo)
         {
