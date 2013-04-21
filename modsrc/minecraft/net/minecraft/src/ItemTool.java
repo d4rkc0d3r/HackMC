@@ -114,7 +114,7 @@ public class ItemTool extends Item
 			AnimalCount.ac.init(par3EntityPlayer).checkChunk();
 		}
 
-		if (itemID == Item.shovelSteel.itemID) {
+		if (itemID == Item.shovelIron.itemID) {
 			AnimalCount.ac.init(par3EntityPlayer).checkWorld();
 		}
 

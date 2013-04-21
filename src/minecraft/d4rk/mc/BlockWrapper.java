@@ -65,7 +65,7 @@ public class BlockWrapper {
 	}
 	
 	public BlockWrapper setIDandMetadataNotify(int id, int meta) {
-		world.setBlockAndMetadataWithNotify(x, y, z, id, meta, 0);
+		world.setBlock(x, y, z, id, meta, 0);
 		return this;
 	}
 	

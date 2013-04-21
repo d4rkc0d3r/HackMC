@@ -165,7 +165,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
      * changing the viewpoint mid-render.
      */
     public EntityLiving renderViewEntity;
-    public EntityLiving field_96291_i;
+    public EntityLiving pointedEntityLiving;
     public EffectRenderer effectRenderer;
     public Session session = null;
     public String minecraftUri;
@@ -203,7 +203,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
     private IntegratedServer theIntegratedServer;
 
     /** Gui achievement */
-    public GuiAchievement guiAchievement = new GuiAchievement(this);
+    public GuiAchievement guiAchievement;
     public GuiIngame ingameGUI;
 
     /** Skip render world */
@@ -301,7 +301,8 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         this.displayHeight = par4;
         this.fullscreen = par5;
         theMinecraft = this;
-        TextureManager.func_94263_a();
+        TextureManager.init();
+        this.guiAchievement = new GuiAchievement(this);
     }
 
     private void startTimerHackThread()
@@ -373,8 +374,8 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
             Display.setDisplayMode(new DisplayMode(this.displayWidth, this.displayHeight));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.5");
-        this.func_98033_al().func_98233_a("LWJGL Version: " + Sys.getVersion());
+        Display.setTitle("Minecraft Minecraft 1.5.1");
+        this.getLogAgent().logInfo("LWJGL Version: " + Sys.getVersion());
 
         try
         {
@@ -437,7 +438,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         this.checkGLError("Startup");
         this.sndManager.loadSoundSettings(this.gameSettings);
         this.renderGlobal = new RenderGlobal(this, this.renderEngine);
-        this.renderEngine.func_94152_c();
+        this.renderEngine.refreshTextureMaps();
         GL11.glViewport(0, 0, this.displayWidth, this.displayHeight);
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
 
@@ -497,7 +498,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_FOG);
         Tessellator var2 = Tessellator.instance;
-        this.renderEngine.func_98187_b("/title/mojang.png");
+        this.renderEngine.bindTexture("/title/mojang.png");
         var2.startDrawingQuads();
         var2.setColorOpaque_I(16777215);
         var2.addVertexWithUV(0.0D, (double)this.displayHeight, 0.0D, 0.0D, 0.0D);
@@ -661,9 +662,9 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         if (var2 != 0)
         {
             String var3 = GLU.gluErrorString(var2);
-            this.func_98033_al().func_98232_c("########## GL ERROR ##########");
-            this.func_98033_al().func_98232_c("@ " + par1Str);
-            this.func_98033_al().func_98232_c(var2 + ": " + var3);
+            this.getLogAgent().logSevere("########## GL ERROR ##########");
+            this.getLogAgent().logSevere("@ " + par1Str);
+            this.getLogAgent().logSevere(var2 + ": " + var3);
         }
     }
 
@@ -689,7 +690,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
                 ;
             }
 
-            this.func_98033_al().func_98233_a("Stopping!");
+            this.getLogAgent().logInfo("Stopping!");
 
             try
             {
@@ -1429,7 +1430,6 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
     {
         this.displayWidth = par1 <= 0 ? 1 : par1;
         this.displayHeight = par2 <= 0 ? 1 : par2;
-        
         ScaledResolution var3 = new ScaledResolution(this.gameSettings, par1, par2);
         int var4 = var3.getScaledWidth();
         int var5 = var3.getScaledHeight();
@@ -1475,7 +1475,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
             this.playerController.updateController();
         }
 
-        this.renderEngine.func_98187_b("/terrain.png");
+        this.renderEngine.bindTexture("/terrain.png");
         this.mcProfiler.endStartSection("textures");
 
         if (!this.isGamePaused)
@@ -1927,7 +1927,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
      */
     private void forceReload()
     {
-        this.func_98033_al().func_98233_a("FORCING RELOAD!");
+        this.getLogAgent().logInfo("FORCING RELOAD!");
 
         if (this.sndManager != null)
         {
@@ -2314,7 +2314,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         while (var19.hasNext())
         {
             String var14 = (String)var19.next();
-            getMinecraft().func_98033_al().func_98233_a(var14);
+            getMinecraft().getLogAgent().logInfo(var14);
         }
 
         var18.start();
@@ -2414,21 +2414,21 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
                 {
                     EntityMinecart var11 = (EntityMinecart)this.objectMouseOver.entityHit;
 
-                    if (var11.func_94087_l() == 2)
+                    if (var11.getMinecartType() == 2)
                     {
                         var2 = Item.minecartPowered.itemID;
                     }
-                    else if (var11.func_94087_l() == 1)
+                    else if (var11.getMinecartType() == 1)
                     {
                         var2 = Item.minecartCrate.itemID;
                     }
-                    else if (var11.func_94087_l() == 3)
+                    else if (var11.getMinecartType() == 3)
                     {
-                        var2 = Item.field_94582_cb.itemID;
+                        var2 = Item.tntMinecart.itemID;
                     }
-                    else if (var11.func_94087_l() == 5)
+                    else if (var11.getMinecartType() == 5)
                     {
-                        var2 = Item.field_96600_cc.itemID;
+                        var2 = Item.hopperMinecart.itemID;
                     }
                     else
                     {
@@ -2642,7 +2642,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         return this.fullscreen;
     }
 
-    public ILogAgent func_98033_al()
+    public ILogAgent getLogAgent()
     {
         return this.field_94139_O;
     }

@@ -256,7 +256,7 @@ public class PlayerAIAutoMine extends PlayerAI {
 	private static int[] axeIDList = new int[] {
 		Item.axeGold.itemID,
 		Item.axeDiamond.itemID,
-		Item.axeSteel.itemID,
+		Item.axeIron.itemID,
 		Item.axeStone.itemID,
 		Item.axeWood.itemID
 	};

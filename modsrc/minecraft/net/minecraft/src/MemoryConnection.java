@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class MemoryConnection implements INetworkManager
 
         if (this.readPacketCache.size() > var1)
         {
-            this.field_98214_c.func_98236_b("Memory connection overburdened; after processing 2500 packets, we still have " + this.readPacketCache.size() + " to go!");
+            this.field_98214_c.logWarning("Memory connection overburdened; after processing 2500 packets, we still have " + this.readPacketCache.size() + " to go!");
         }
 
         if (this.shuttingDown && this.readPacketCache.isEmpty())

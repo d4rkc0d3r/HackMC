@@ -2,7 +2,6 @@ package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 import d4rk.mc.event.listener.InventoryHelper;
-import d4rk.mc.inventory.FillChest;
 
 public class GuiFurnace extends GuiContainer
 {
@@ -70,7 +69,7 @@ public class GuiFurnace extends GuiContainer
      */
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        String var3 = this.furnaceInventory.func_94042_c() ? this.furnaceInventory.getInvName() : StatCollector.translateToLocal(this.furnaceInventory.getInvName());
+        String var3 = this.furnaceInventory.isInvNameLocalized() ? this.furnaceInventory.getInvName() : StatCollector.translateToLocal(this.furnaceInventory.getInvName());
         this.fontRenderer.drawString(var3, this.xSize / 2 - this.fontRenderer.getStringWidth(var3) / 2, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
@@ -81,7 +80,7 @@ public class GuiFurnace extends GuiContainer
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.func_98187_b("/gui/furnace.png");
+        this.mc.renderEngine.bindTexture("/gui/furnace.png");
         int var4 = (this.width - this.xSize) / 2;
         int var5 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var4, var5, 0, 0, this.xSize, this.ySize);

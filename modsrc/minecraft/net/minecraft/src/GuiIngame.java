@@ -96,12 +96,12 @@ public class GuiIngame extends Gui
         if (!this.mc.playerController.enableEverythingIsScrewedUpMode())
         {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.mc.renderEngine.func_98187_b("/gui/gui.png");
+            this.mc.renderEngine.bindTexture("/gui/gui.png");
             InventoryPlayer var31 = this.mc.thePlayer.inventory;
             this.zLevel = -90.0F;
             this.drawTexturedModalRect(var6 / 2 - 91, var7 - 22, 0, 0, 182, 22);
             this.drawTexturedModalRect(var6 / 2 - 91 - 1 + var31.currentItem * 20, var7 - 22 - 1, 0, 22, 24, 22);
-            this.mc.renderEngine.func_98187_b("/gui/icons.png");
+            this.mc.renderEngine.bindTexture("/gui/icons.png");
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
             this.drawTexturedModalRect(var6 / 2 - 7, var7 / 2 - 7, 0, 0, 16, 16);
@@ -435,7 +435,7 @@ public class GuiIngame extends Gui
             var8.drawStringWithShadow(var35, var6 - var12 - 10, 5, 16777215);
             this.mc.mcProfiler.endSection();
         }
-        
+
         mc.mcProfiler.startSection("OverlayManager");
         GL11.glPushMatrix();
         OverlayManager.getInstance().draw(var6, var7);
@@ -455,7 +455,7 @@ public class GuiIngame extends Gui
         {
             this.mc.mcProfiler.startSection("debug");
             GL11.glPushMatrix();
-            var8.drawStringWithShadow("Minecraft 1.5 (" + this.mc.debug + ")", 2, 2, 16777215);
+            var8.drawStringWithShadow("Minecraft 1.5.1 (" + this.mc.debug + ")", 2, 2, 16777215);
             var8.drawStringWithShadow(this.mc.debugInfoRenders(), 2, 12, 16777215);
             var8.drawStringWithShadow(this.mc.getEntityDebug(), 2, 22, 16777215);
             var8.drawStringWithShadow(this.mc.debugInfoEntities(), 2, 32, 16777215);
@@ -520,7 +520,7 @@ public class GuiIngame extends Gui
             this.mc.mcProfiler.endSection();
         }
 
-        ScoreObjective var42 = this.mc.theWorld.func_96441_U().func_96539_a(1);
+        ScoreObjective var42 = this.mc.theWorld.getScoreboard().func_96539_a(1);
 
         if (var42 != null)
         {
@@ -536,7 +536,7 @@ public class GuiIngame extends Gui
         this.persistantChatGUI.drawChat(this.updateCounter);
         this.mc.mcProfiler.endSection();
         GL11.glPopMatrix();
-        var42 = this.mc.theWorld.func_96441_U().func_96539_a(0);
+        var42 = this.mc.theWorld.getScoreboard().func_96539_a(0);
 
         if (this.mc.gameSettings.keyBindPlayerList.pressed && (!this.mc.isIntegratedServerRunning() || this.mc.thePlayer.sendQueue.playerInfoList.size() > 1 || var42 != null))
         {
@@ -573,7 +573,7 @@ public class GuiIngame extends Gui
                 if (var20 < var41.size())
                 {
                     GuiPlayerInfo var49 = (GuiPlayerInfo)var41.get(var20);
-                    ScorePlayerTeam var48 = this.mc.theWorld.func_96441_U().func_96509_i(var49.name);
+                    ScorePlayerTeam var48 = this.mc.theWorld.getScoreboard().func_96509_i(var49.name);
                     String var53 = ScorePlayerTeam.func_96667_a(var48, var49.name);
                     var8.drawStringWithShadow(var53, var47, var22, 16777215);
 
@@ -584,14 +584,14 @@ public class GuiIngame extends Gui
 
                         if (var50 - var26 > 5)
                         {
-                            Score var56 = var42.func_96682_a().func_96529_a(var49.name, var42);
+                            Score var56 = var42.getScoreboard().func_96529_a(var49.name, var42);
                             String var57 = EnumChatFormatting.YELLOW + "" + var56.func_96652_c();
                             var8.drawStringWithShadow(var57, var50 - var8.getStringWidth(var57), var22, 16777215);
                         }
                     }
 
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    this.mc.renderEngine.func_98187_b("/gui/icons.png");
+                    this.mc.renderEngine.bindTexture("/gui/icons.png");
                     byte var55 = 0;
                     boolean var54 = false;
 
@@ -634,12 +634,12 @@ public class GuiIngame extends Gui
 
     private void func_96136_a(ScoreObjective par1ScoreObjective, int par2, int par3, FontRenderer par4FontRenderer)
     {
-        Scoreboard var5 = par1ScoreObjective.func_96682_a();
+        Scoreboard var5 = par1ScoreObjective.getScoreboard();
         Collection var6 = var5.func_96534_i(par1ScoreObjective);
 
         if (var6.size() <= 15)
         {
-            int var7 = 0;
+            int var7 = par4FontRenderer.getStringWidth(par1ScoreObjective.getDisplayName());
             String var11;
 
             for (Iterator var8 = var6.iterator(); var8.hasNext(); var7 = Math.max(var7, par4FontRenderer.getStringWidth(var11)))
@@ -671,7 +671,7 @@ public class GuiIngame extends Gui
 
                 if (var12 == var6.size())
                 {
-                    String var21 = par1ScoreObjective.func_96678_d();
+                    String var21 = par1ScoreObjective.getDisplayName();
                     drawRect(var24 - 2, var19 - par4FontRenderer.FONT_HEIGHT - 1, var20, var19 - 1, 1610612736);
                     drawRect(var24 - 2, var19 - 1, var20, var19, 1342177280);
                     par4FontRenderer.drawString(var21, var24 + var7 / 2 - par4FontRenderer.getStringWidth(var21) / 2, var19 - par4FontRenderer.FONT_HEIGHT, 553648127);
@@ -706,7 +706,7 @@ public class GuiIngame extends Gui
             String var8 = BossStatus.bossName;
             var1.drawStringWithShadow(var8, var3 / 2 - var1.getStringWidth(var8) / 2, var7 - 10, 16777215);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.mc.renderEngine.func_98187_b("/gui/icons.png");
+            this.mc.renderEngine.bindTexture("/gui/icons.png");
         }
     }
 
@@ -717,7 +717,7 @@ public class GuiIngame extends Gui
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
-        this.mc.renderEngine.func_98187_b("%blur%/misc/pumpkinblur.png");
+        this.mc.renderEngine.bindTexture("%blur%/misc/pumpkinblur.png");
         Tessellator var3 = Tessellator.instance;
         var3.startDrawingQuads();
         var3.addVertexWithUV(0.0D, (double)par2, -90.0D, 0.0D, 1.0D);
@@ -753,7 +753,7 @@ public class GuiIngame extends Gui
         GL11.glDepthMask(false);
         GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR);
         GL11.glColor4f(this.prevVignetteBrightness, this.prevVignetteBrightness, this.prevVignetteBrightness, 1.0F);
-        this.mc.renderEngine.func_98187_b("%blur%/misc/vignette.png");
+        this.mc.renderEngine.bindTexture("%blur%/misc/vignette.png");
         Tessellator var4 = Tessellator.instance;
         var4.startDrawingQuads();
         var4.addVertexWithUV(0.0D, (double)par3, -90.0D, 0.0D, 1.0D);
@@ -784,12 +784,12 @@ public class GuiIngame extends Gui
         GL11.glDepthMask(false);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
-        this.mc.renderEngine.func_98187_b("/terrain.png");
+        this.mc.renderEngine.bindTexture("/terrain.png");
         Icon var4 = Block.portal.getBlockTextureFromSide(1);
-        float var5 = var4.func_94209_e();
-        float var6 = var4.func_94206_g();
-        float var7 = var4.func_94212_f();
-        float var8 = var4.func_94210_h();
+        float var5 = var4.getMinU();
+        float var6 = var4.getMinV();
+        float var7 = var4.getMaxU();
+        float var8 = var4.getMaxV();
         Tessellator var9 = Tessellator.instance;
         var9.startDrawingQuads();
         var9.addVertexWithUV(0.0D, (double)par3, -90.0D, (double)var5, (double)var8);
