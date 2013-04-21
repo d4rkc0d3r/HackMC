@@ -91,10 +91,9 @@ public class PlayerWrapper {
 	
 	public boolean selectToolForBlock(BlockWrapper block) {
 		(new SelectBestToolForBlock(this, block)).doOperation();
-		return ((getCurrentItem() == null)
+		return block.getMaterial().isToolNotRequired() || ((getCurrentItem() == null)
 				? new ItemStack(Block.dirt)
-				: getCurrentItem()).canHarvestBlock(block.getBlock())
-				|| block.getMaterial().isToolNotRequired();
+				: getCurrentItem()).canHarvestBlock(block.getBlock());
 	}
 	
 	/**
