@@ -4,7 +4,7 @@ import net.minecraft.src.Packet;
 
 public class UniquePacket {
 	private Packet p = null;
-	private int id = 0;
+	private long id = 0;
 	
 	public UniquePacket(Packet p) {
 		this.p = p;
@@ -15,9 +15,15 @@ public class UniquePacket {
 		return p;
 	}
 	
+	@Override
 	public int hashCode() {
-		return id;
+		return (int)id;
 	}
 	
-	private static int currentID = 0;
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof UniquePacket) ? ((UniquePacket)o).id == id : false;
+	}
+	
+	private static long currentID = 0;
 }
