@@ -13,7 +13,7 @@ public class MoveHelper {
 	protected EntityPlayer player;
 	protected PathEntity path = null;
 	
-	MoveHelper(EntityPlayer player) {
+	public MoveHelper(EntityPlayer player) {
 		this.player = player;
 	}
 	
@@ -93,40 +93,56 @@ public class MoveHelper {
 	}
 	
 	protected void checkBlocks(Vec3D vec) {
-		double X = 0;
-		double Z = 0;
+		int X = 0;
+		int Z = 0;
 		if(vec.x!=0) X = (vec.x<0) ? -1 : 1;
 		if(vec.z!=0) Z = (vec.z<0) ? -1 : 1;
-		Material matX0 = getMaterialRelative(X, 0, 0);
-		Material matZ0 = getMaterialRelative(0, 0, Z);
-		Material matX1 = getMaterialRelative(X, 1, 0);
-		Material matZ1 = getMaterialRelative(0, 1, Z);
-		Material matX2 = getMaterialRelative(X, 2, 0);
-		Material matZ2 = getMaterialRelative(0, 2, Z);
-		if(matX1.blocksMovement()) {
-			if(matX2.blocksMovement()) {
+		Vec3D pos = Vec3D.getPlayerFootPos(player);
+		BlockWrapper bx = new BlockWrapper(pos).getRelative(X, 0, 0);
+		BlockWrapper bz = new BlockWrapper(pos).getRelative(0, 0, Z);
+
+		if(X != 0) {
+			double stepHeight = bx.getStepHeight(player);
+			if(stepHeight > 0.5 && stepHeight < 1.1) {
+				jumpInDirection(vec);
+			} else if(stepHeight < -10) {
 				capX(vec);
 			}
-			else {
+		}
+		if(Z != 0) {
+			double stepHeight = bz.getStepHeight(player);
+			if(stepHeight > 0.5 && stepHeight < 1.1) {
 				jumpInDirection(vec);
+			} else if(stepHeight < -10) {
+				capZ(vec);
 			}
 		}
-		else if(!matX2.blocksMovement() && !matX0.blocksMovement()) {
+		/*
+		if(bx.getRelative(0, 1, 0).getMaterial().blocksMovement()
+				&& !bx.getRelative(0, 1, 0).isOneOf(new int[]{Block.fence.blockID})) {
+			if(bx.getRelative(0, 2, 0).getMaterial().blocksMovement()
+					|| bx.getRelative(0, 3, 0).getMaterial().blocksMovement()) {
+				capX(vec);
+			} else {
+				jumpInDirection(vec);
+			}
+		} else if(!bx.getMaterial().blocksMovement()
+				&& !bx.getRelative(0, 1, 0).getMaterial().blocksMovement()
+				&& !bx.getRelative(0, 2, 0).getMaterial().blocksMovement()) {
 			//TODO: check for falling distance and avoid it (maybe)
 			//capX(vec);
 		}
-		if(matZ1.blocksMovement()) {
-			if(matZ2.blocksMovement()) {
-				capZ(vec);
-			}
-			else {
+		if(bz.getRelative(0, 1, 0).getMaterial().blocksMovement()) {
+			if(bz.getRelative(0, 2, 0).getMaterial().blocksMovement()
+					|| bz.getRelative(0, 3, 0).getMaterial().blocksMovement()) {
+				capX(vec);
+			} else {
 				jumpInDirection(vec);
 			}
-		}
-		else if(!matZ2.blocksMovement() && !matZ0.blocksMovement()) {
+		} else if(!bz.getMaterial().blocksMovement() && !bz.getRelative(0, 2, 0).getMaterial().blocksMovement()) {
 			//TODO: check for falling distance and avoid it (maybe)
 			//capZ(vec);
-		}
+		}*/
 	}
 	
 	private boolean tryMoveTo(int x, int y, int z) {

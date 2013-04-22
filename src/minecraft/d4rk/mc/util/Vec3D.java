@@ -60,8 +60,7 @@ public class Vec3D {
 		set(block.getSideCoords(BlockWrapper.INSIDE));
 	}
 	
-	public Vec3D(Entity e)
-	{
+	public Vec3D(Entity e) {
 		x=e.posX;
 		y=e.posY;
 		z=e.posZ;
@@ -265,5 +264,9 @@ public class Vec3D {
 	 */
 	public static Vec3D getMiddle(Entity e) {
 		return new Vec3D(e.posX, e.posY+e.height/2, e.posZ);
+	}
+	
+	public static Vec3D getPlayerFootPos(EntityPlayer e) {
+		return new Vec3D(e.posX, e.boundingBox.minY, e.posZ);
 	}
 }

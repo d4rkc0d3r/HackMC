@@ -6,6 +6,7 @@ import d4rk.mc.util.Vec3D;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntitySign;
@@ -274,6 +275,57 @@ public class BlockWrapper {
 		return new BlockWrapper(this.x+x, this.y+y, this.z+z, this.world);
 	}
 	
+	public boolean blocksMovement() {
+		return getMaterial().blocksMovement();
+	}
+	
+	public boolean canPlayerStandOn() {
+		if(!blocksMovement()) {
+			return false;
+		} else {
+			double height = getCollisionBoxMaxY();
+			if(height == 1.5) {
+				return (getRelative(0, 1, 0).getCollisionBoxMaxY() <= 0.5 || !getRelative(0, 1, 0).blocksMovement())
+						&& !getRelative(0, 2, 0).blocksMovement()
+						&& (!getRelative(0, 3, 0).blocksMovement() || getRelative(0, 3, 0).getBlock().getBlockBoundsMinY() > 0.5);
+			} else if(height == 1.0) {
+				return (!getRelative(0, 1, 0).blocksMovement() && !getRelative(0, 2, 0).blocksMovement());
+			} else {
+				return (!getRelative(0, 1, 0).blocksMovement() && (!getRelative(0, 2, 0).blocksMovement()
+						|| getRelative(0, 2, 0).getBlock().getBlockBoundsMinY() > (1 - height)));
+			}
+		}
+	}
+	
+	public double getCollisionBoxMaxY() {
+		if(isOneOf(Block.fence.blockID, Block.fenceGate.blockID, Block.netherFence.blockID)) {
+			return 1.5;
+		} else {
+			return (getBlock() == null) ? 0 : getBlock().getBlockBoundsMaxY();
+		}
+	}
+	
+	public double getStepHeight(EntityPlayer e) {
+		Vec3D pos = Vec3D.getPlayerFootPos(e);
+		BlockWrapper test = this;
+		if(!blocksMovement() && !getRelative(0, 1, 0).blocksMovement() && !getRelative(0, 2, 0).blocksMovement()) {
+			while(test.y > 0) {
+				if(test.canPlayerStandOn()) {
+					break;
+				}
+				test = test.getRelative(0, -1, 0);
+			}
+		} else {
+			while(test.y < 255) {
+				if(test.canPlayerStandOn()) {
+					break;
+				}
+				test = test.getRelative(0, 1, 0);
+			}
+		}
+		return (test.y + test.getCollisionBoxMaxY()) - pos.y;
+	}
+	
 	public boolean isInsideOf(BlockWrapper from, BlockWrapper to) {
 		if(from.world != to.world) return false;
 		return x <= Math.max(from.x, to.x) && x >= Math.min(from.x, to.x) &&
@@ -281,7 +333,7 @@ public class BlockWrapper {
 			   z <= Math.max(from.z, to.z) && z >= Math.min(from.z, to.z);
 	}
 	
-	public boolean isOneOf(int[] IDs) {
+	public boolean isOneOf(int ... IDs) {
 		int ID = this.getID();
 		for (int id : IDs)
 			if (id == ID)

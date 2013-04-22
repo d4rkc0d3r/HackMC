@@ -113,7 +113,6 @@ public class Hack {
 		EntityPlayer p = mc.thePlayer;
 		ItemStack item = p.inventory.getCurrentItem();
 		BlockWrapper block = new BlockWrapper(x, y, z);
-		
 		return false;
 	}
 
