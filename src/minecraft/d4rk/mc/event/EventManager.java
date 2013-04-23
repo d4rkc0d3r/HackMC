@@ -89,8 +89,6 @@ public class EventManager {
 	}
 
 	public static void loadBasicListeners() {
-		map.clear();
-
 		registerEvents(new InventoryHelper());
 		registerEvents(new CommandParser());
 		registerEvents(new PMParser());

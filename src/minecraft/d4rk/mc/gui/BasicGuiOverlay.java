@@ -31,8 +31,9 @@ public abstract class BasicGuiOverlay extends BasicGui {
 		return isVisible;
 	}
 
-	public void setVisible(boolean isVisible) {
+	public BasicGuiOverlay setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+		return this;
 	}
 	
 	public abstract String getName();

@@ -100,7 +100,6 @@ public class MoveHelper {
 		Vec3D pos = Vec3D.getPlayerFootPos(player);
 		BlockWrapper bx = new BlockWrapper(pos).getRelative(X, 0, 0);
 		BlockWrapper bz = new BlockWrapper(pos).getRelative(0, 0, Z);
-
 		if(X != 0) {
 			double stepHeight = bx.getStepHeight(player);
 			if(stepHeight > 0.5 && stepHeight < 1.1) {
@@ -117,36 +116,10 @@ public class MoveHelper {
 				capZ(vec);
 			}
 		}
-		/*
-		if(bx.getRelative(0, 1, 0).getMaterial().blocksMovement()
-				&& !bx.getRelative(0, 1, 0).isOneOf(new int[]{Block.fence.blockID})) {
-			if(bx.getRelative(0, 2, 0).getMaterial().blocksMovement()
-					|| bx.getRelative(0, 3, 0).getMaterial().blocksMovement()) {
-				capX(vec);
-			} else {
-				jumpInDirection(vec);
-			}
-		} else if(!bx.getMaterial().blocksMovement()
-				&& !bx.getRelative(0, 1, 0).getMaterial().blocksMovement()
-				&& !bx.getRelative(0, 2, 0).getMaterial().blocksMovement()) {
-			//TODO: check for falling distance and avoid it (maybe)
-			//capX(vec);
-		}
-		if(bz.getRelative(0, 1, 0).getMaterial().blocksMovement()) {
-			if(bz.getRelative(0, 2, 0).getMaterial().blocksMovement()
-					|| bz.getRelative(0, 3, 0).getMaterial().blocksMovement()) {
-				capX(vec);
-			} else {
-				jumpInDirection(vec);
-			}
-		} else if(!bz.getMaterial().blocksMovement() && !bz.getRelative(0, 2, 0).getMaterial().blocksMovement()) {
-			//TODO: check for falling distance and avoid it (maybe)
-			//capZ(vec);
-		}*/
 	}
 	
 	private boolean tryMoveTo(int x, int y, int z) {
-		addVelocity(new Vec3D(player.posX-(x+0.5F),player.posY-1.62F-(y),player.posZ-(z+0.5F)).mul(-1));
+		addVelocity(new Vec3D(player.posX-(x+0.5F),player.boundingBox.minY-1.62F-(y),player.posZ-(z+0.5F)).mul(-1));
 		if(player.getDistance(x+0.5, player.posY, z+0.5)<0.5) {
 			return true;
 		}
