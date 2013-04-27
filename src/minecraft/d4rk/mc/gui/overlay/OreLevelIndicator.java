@@ -22,12 +22,24 @@ import d4rk.mc.gui.BasicGuiOverlay;
 public class OreLevelIndicator extends BasicGuiOverlay implements EventListener {
 	public List<ItemStack> oreList = new ArrayList();
     protected static RenderItem itemRenderer = new RenderItem();
+    private ItemStack quarz;
+    private ItemStack emerald;
+    private ItemStack diamond;
+    private ItemStack redstone;
+    private ItemStack lapis;
+    private ItemStack gold;
+    private ItemStack iron;
 	
 	public OreLevelIndicator() {
 		super();
-		oreList.add(new ItemStack(Item.emerald));
-		oreList.add(new ItemStack(Item.diamond));
-		oreList.add(new ItemStack(Item.ingotIron));
+		quarz = new ItemStack(Item.netherQuartz);
+		emerald = new ItemStack(Item.emerald);
+		diamond = new ItemStack(Item.diamond);
+		redstone = new ItemStack(Item.redstone);
+		lapis = new ItemStack(Item.dyePowder);
+		lapis.setItemDamage(4);
+		gold = new ItemStack(Item.ingotGold);
+		iron = new ItemStack(Item.ingotIron);
 		EventManager.registerEvents(this);
 	}
 	
@@ -44,26 +56,24 @@ public class OreLevelIndicator extends BasicGuiOverlay implements EventListener 
 			
 		} else if(biome == BiomeGenBase.hell) {
 			if(mc.thePlayer.posY <= 128) {
-				oreList.add(new ItemStack(Item.netherQuartz));
+				oreList.add(quarz);
 			}
 		} else {
 			if(mc.thePlayer.posY <= 30 && (biome == BiomeGenBase.extremeHills || biome == BiomeGenBase.extremeHills.extremeHillsEdge)) {
-				oreList.add(new ItemStack(Item.emerald));
+				oreList.add(emerald);
 			}
 			if(mc.thePlayer.posY <= 15) {
-				oreList.add(new ItemStack(Item.diamond));
-				oreList.add(new ItemStack(Item.redstone));
+				oreList.add(diamond);
+				oreList.add(redstone);
 			}
 			if(mc.thePlayer.posY <= 23) {
-				ItemStack lapis = new ItemStack(Item.dyePowder);
-				lapis.setItemDamage(4);
 				oreList.add(lapis);
 			}
 			if(mc.thePlayer.posY <= 32) {
-				oreList.add(new ItemStack(Item.ingotGold));
+				oreList.add(gold);
 			}
 			if(mc.thePlayer.posY <= 64) {
-				oreList.add(new ItemStack(Item.ingotIron));
+				oreList.add(iron);
 			}
 		}
 		
