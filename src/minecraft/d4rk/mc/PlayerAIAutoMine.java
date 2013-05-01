@@ -125,7 +125,6 @@ public class PlayerAIAutoMine extends PlayerAI {
 	
 	protected void startMining() {
 		if(!isMining) {
-			Hack.getPlayerWrapper().selectToolForBlock(new BlockWrapper(next));
 			Hack.mc.playerController.clickBlock(next.getX(), next.getY(), next.getZ(), side);
 			Hack.isAutoMining = true;
 			isMining = true;
@@ -142,6 +141,7 @@ public class PlayerAIAutoMine extends PlayerAI {
 //					if(player.inventory.canHarvestBlock(target))
 //						break;
 //				}
+			Hack.getPlayerWrapper().selectToolForBlock(new BlockWrapper(next));
 			startMining();
 			Hack.mc.playerController.onPlayerDamageBlock(next.getX(), next.getY(), next.getZ(), side);
 			Hack.mc.effectRenderer.addBlockHitEffects(next.getX(), next.getY(), next.getZ(), side);

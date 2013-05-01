@@ -298,7 +298,8 @@ public class BlockWrapper {
 	}
 	
 	public double getCollisionBoxMaxY() {
-		if(isOneOf(Block.fence.blockID, Block.fenceGate.blockID, Block.netherFence.blockID)) {
+		if(isOneOf(Block.fence.blockID, Block.fenceGate.blockID,
+				Block.netherFence.blockID, Block.cobblestoneWall.blockID)) {
 			return 1.5;
 		} else {
 			return (getBlock() == null) ? 0 : getBlock().getBlockBoundsMaxY();
