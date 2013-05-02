@@ -7,6 +7,7 @@ import net.minecraft.src.ItemStack;
 
 import d4rk.mc.Hack;
 import d4rk.mc.PlayerWrapper;
+import d4rk.mc.event.listener.InventoryHelper;
 import d4rk.mc.util.Pair;
 
 public class SelectionSortChest extends Operation {
@@ -32,13 +33,9 @@ public class SelectionSortChest extends Operation {
 		// Selection sort, because not the check is expensive, its the swap operation.
 		for (int j = 0; j < size - 1; j++) {
 			int swapIndex = j;
-			long swapVal = (inv.get(j) == null) ? (up) ? Short.MAX_VALUE : 0 : inv.get(j).itemID;
-			swapVal = (swapVal << 16L) + ((inv.get(j) == null) ? 0 : inv.get(j).getItemDamage());
 			for (int i = j + 1; i < size; i++) {
-				long checkVal = (inv.get(i) == null) ? (up) ? Short.MAX_VALUE : 0 : inv.get(i).itemID;
-				checkVal = (checkVal << 16L) + ((inv.get(i) == null) ? 0 : inv.get(i).getItemDamage());
-				if(((swapVal > checkVal) && up) || (!up && (swapVal < checkVal))) {
-					swapVal = checkVal;
+				if(((InventoryHelper.compareItemStack(inv.get(swapIndex), inv.get(i)) < 0) && up)
+						|| (!up && (InventoryHelper.compareItemStack(inv.get(swapIndex), inv.get(i)) > 0))) {
 					swapIndex = i;
 				}
 			}
@@ -48,7 +45,6 @@ public class SelectionSortChest extends Operation {
 				return; // so we can see it step by step ;)
 			}
 		}
-		
 		done();
 	}
 	

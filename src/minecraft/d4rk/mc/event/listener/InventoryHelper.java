@@ -2,10 +2,14 @@ package d4rk.mc.event.listener;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.Container;
+import net.minecraft.src.EnchantmentHelper;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Packet100OpenWindow;
 import net.minecraft.src.Packet101CloseWindow;
@@ -79,30 +83,6 @@ public class InventoryHelper implements EventListener {
 			op.setPlayerWrapper(pWrap);
 		processQueue = true;
 	}
-
-	public boolean selectBestToolForBlock(BlockWrapper block) { //TODO implement me
-		Block b = block.getBlock();
-		if(b == null)
-			return true;
-
-		List itemStacks = pWrap.player.openContainer.getInventory();
-		
-		for(int i = itemStacks.size()-1;i >= 0;i--) {
-			ItemStack item = (ItemStack) itemStacks.get(i);
-			if(item == null)
-				continue;
-			if(item.canHarvestBlock(b)) {
-				if(i >= itemStacks.size() - 9) { // is in the hotbar
-					pWrap.selectItem(item.getItem());
-					return true;
-				} else {
-					
-				}
-			}
-		}
-		
-		return false;
-	}
 	
 	private void leftClickOn(int id) {
 		addToQueue(new Click(pWrap, inventoryType, id, 0, false));
@@ -115,6 +95,41 @@ public class InventoryHelper implements EventListener {
 	@Override
 	public boolean isDestroyed() {
 		return false;
+	}
+	
+	public static int compareItemStack(ItemStack a, ItemStack b) {
+		if(a == null) {
+			return (b == null) ? 0 : -1;
+		}
+		if(b == null) {
+			return 1;
+		}
+		if(a.itemID == b.itemID) {
+			if(a.getItemDamage() == b.getItemDamage()) {
+				Map<Integer, Integer> aEnch = EnchantmentHelper.getEnchantments(a);
+				Map<Integer, Integer> bEnch = EnchantmentHelper.getEnchantments(b);
+				Set<Integer> allEnchIds = new TreeSet<Integer>();
+				allEnchIds.addAll(aEnch.keySet());
+				allEnchIds.addAll(bEnch.keySet());
+				for(Integer i : allEnchIds) {
+					Integer ae = aEnch.get(i);
+					Integer be = bEnch.get(i);
+					if(ae == be) {
+						continue;
+					} else if(ae == null) {
+						return -1;
+					} else if(be == null) {
+						return 1;
+					} else {
+						return (ae < be) ? 1 : -1;
+					}
+				}
+				return 0;
+			}
+			return (a.getItemDamage() < b.getItemDamage()) ? 1 : -1;
+		} else {
+			return (a.itemID < b.itemID) ? 1 : -1;
+		}
 	}
 	
 	public static void clearQueue() {
