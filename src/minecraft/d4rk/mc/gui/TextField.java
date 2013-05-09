@@ -256,7 +256,7 @@ public class TextField extends BasicGui {
 	}
 
 	public void setEnabeled(boolean par1) {
-		textField.func_82265_c(par1);
+		textField.setEnabled(par1);
 	}
 
 	/**

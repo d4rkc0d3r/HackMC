@@ -693,9 +693,9 @@ public class NetClientHandler extends NetHandler
             {
                 switch (par1Packet.getPacketId())
                 {
-                        // 0 keep alive
-                        // 10 - 13 move and look packets
-                        // 18 animations
+                    // 0 keep alive
+                    // 10 - 13 move and look packets
+                    // 18 animations
                     case 0:
                     case 10:
                     case 11:
@@ -782,6 +782,7 @@ public class NetClientHandler extends NetHandler
         {
             ImproveChat.addToChatGui(event.message);
         }
+
     }
 
     public void handleAnimation(Packet18Animation par1Packet18Animation)
@@ -1032,7 +1033,7 @@ public class NetClientHandler extends NetHandler
 
                 if (par1Packet100OpenWindow.useProvidedWindowTitle)
                 {
-                    var7.func_94049_a(par1Packet100OpenWindow.windowTitle);
+                    var7.setCustomName(par1Packet100OpenWindow.windowTitle);
                 }
 
                 var2.displayGUIDispenser(var7);
@@ -1083,10 +1084,10 @@ public class NetClientHandler extends NetHandler
 
                 if (par1Packet100OpenWindow.useProvidedWindowTitle)
                 {
-                    var3.func_96115_a(par1Packet100OpenWindow.windowTitle);
+                    var3.setInventoryName(par1Packet100OpenWindow.windowTitle);
                 }
 
-                var2.func_94064_a(var3);
+                var2.displayGUIHopper(var3);
                 var2.openContainer.windowId = par1Packet100OpenWindow.windowId;
                 break;
 
@@ -1095,7 +1096,7 @@ public class NetClientHandler extends NetHandler
 
                 if (par1Packet100OpenWindow.useProvidedWindowTitle)
                 {
-                    var6.func_94049_a(par1Packet100OpenWindow.windowTitle);
+                    var6.setCustomName(par1Packet100OpenWindow.windowTitle);
                 }
 
                 var2.displayGUIDispenser(var6);
@@ -1655,7 +1656,7 @@ public class NetClientHandler extends NetHandler
             while (var4.hasNext())
             {
                 var5 = (String)var4.next();
-                var2.func_96512_b(var5, var3);
+                var2.removePlayerFromTeam(var5, var3);
             }
         }
 

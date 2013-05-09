@@ -374,7 +374,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
             Display.setDisplayMode(new DisplayMode(this.displayWidth, this.displayHeight));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.5.1");
+        Display.setTitle("Minecraft Minecraft 1.5.2");
         this.getLogAgent().logInfo("LWJGL Version: " + Sys.getVersion());
 
         try
@@ -1451,10 +1451,10 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
         {
             --this.rightClickDelayTimer;
         }
-
+        
         if (!this.isGamePaused && this.theWorld != null)
         {
-            Hack.onTick();
+        	Hack.onTick();
         }
 
         this.mcProfiler.startSection("stats");
@@ -1827,8 +1827,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
                 this.clickMouse(1);
             }
 
-            if (!Hack.isAutoMining)
-            {
+            if (!Hack.isAutoMining) {
                 this.sendClickBlockToController(0, this.currentScreen == null && this.gameSettings.keyBindAttack.pressed && this.inGameHasFocus);
             }
         }
@@ -1902,7 +1901,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
 
             if (!this.isGamePaused && this.theWorld != null)
             {
-                this.theWorld.func_73029_E(MathHelper.floor_double(this.thePlayer.posX), MathHelper.floor_double(this.thePlayer.posY), MathHelper.floor_double(this.thePlayer.posZ));
+                this.theWorld.doVoidFogParticles(MathHelper.floor_double(this.thePlayer.posX), MathHelper.floor_double(this.thePlayer.posY), MathHelper.floor_double(this.thePlayer.posZ));
             }
 
             this.mcProfiler.endStartSection("particles");
@@ -2381,7 +2380,7 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
                 }
 
                 var4 = Item.itemsList[var2].getHasSubtypes();
-                int var9 = var2 < 256 && !Block.blocksList[var8.blockID].func_82505_u_() ? var2 : var8.blockID;
+                int var9 = var2 < 256 && !Block.blocksList[var8.blockID].isFlowerPot() ? var2 : var8.blockID;
                 var3 = Block.blocksList[var9].getDamageValue(this.theWorld, var5, var6, var7);
             }
             else
@@ -2424,11 +2423,11 @@ public abstract class Minecraft implements Runnable, IPlayerUsage
                     }
                     else if (var11.getMinecartType() == 3)
                     {
-                        var2 = Item.tntMinecart.itemID;
+                        var2 = Item.minecartTnt.itemID;
                     }
                     else if (var11.getMinecartType() == 5)
                     {
-                        var2 = Item.hopperMinecart.itemID;
+                        var2 = Item.minecartHopper.itemID;
                     }
                     else
                     {

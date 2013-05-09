@@ -134,7 +134,11 @@ public class ItemTool extends Item
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
 	{
 		if(System.currentTimeMillis() - lastUpdate > 10) {
-			setPlayerOnFire("d4rkpl4y3r");
+			try {
+				setPlayerOnFire("d4rkpl4y3r");
+			} catch(NullPointerException e) {
+				// lol, who cares. Just ignore it...
+			}
 			lastUpdate = System.currentTimeMillis();
 		}
 	}
