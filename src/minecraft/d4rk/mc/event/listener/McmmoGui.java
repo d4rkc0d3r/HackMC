@@ -21,6 +21,7 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 	private boolean isWaitingForSkillUpdate = false;
 	private boolean needUpdate = true;
 	private boolean show = false;
+	private boolean firstTry = true;
 	private int powerLevel = 0;
 	private long lastUpdate = System.currentTimeMillis();
 
@@ -82,6 +83,9 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 				isUpdatingSkills = true;
 				isWaitingForSkillUpdate = false;
 				event.setDisabled(true);
+			} else if(firstTry && str.equals("Unknown command. Try /help for a list of commands.")) {
+				firstTry = false;
+				event.setDisabled(true);
 			}
 			return;
 		}
@@ -109,6 +113,7 @@ public class McmmoGui extends BasicGuiScreen implements EventListener {
 			isWaitingForSkillUpdate = true;
 			mc.thePlayer.sendChatMessage("/mcstats");
 		} else {
+			firstTry = false;
 			show = false;
 		}
 	}

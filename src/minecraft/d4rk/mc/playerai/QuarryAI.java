@@ -41,6 +41,7 @@ public class QuarryAI extends BaseAI {
 		
 		if(current != null && current.isAir()) {
 			current = quarry.getNext();
+			quarry.oneLayerUp();
 		}
 		
 		if(current == null) {
@@ -56,11 +57,17 @@ public class QuarryAI extends BaseAI {
 		
 		//TODO: if inventory is full then deposit stuff in a chest if he has one in the hotbar
 		
-		startScript(new String[] {
-			"nolog: pathto " + current.getPositionString() + " 3.5",
-			"nolog: mineblock " + current.getString()
-		});
-		
-		quarry.oneLayerUp();
+		if(pWrap.getPosition().getY() > current.y + 8) {
+			int playerY = pWrap.getPosition().getY();
+			BlockWrapper[] stair = quarry.calculateStaircaise();
+			for(BlockWrapper step : stair) {
+				if(step.y + 7 > playerY) {
+					startScript("nolog: pathto " + step.getPositionString());
+				}
+			}
+		} else {
+			startScript("nolog: pathto " + current.getPositionString() + " 3.5",
+					"nolog: mineblock " + current.getString());
+		}
 	}
 }

@@ -96,14 +96,14 @@ public class Quarry {
 		current = -1;
 	}
 	
-	private boolean isStair(BlockWrapper b) {
+	public boolean isStair(BlockWrapper b) {
 		for(BlockWrapper t : stair) if(t.equals(b)) return true; return false;
 	}
 	
 	/**
 	 * Calculates the stair case blocks and returns them in an array.
 	 */
-	private BlockWrapper[] calculateStaircaise() {
+	public BlockWrapper[] calculateStaircaise() {
 		if(from.x==to.x || from.z == to.z) {
 			return new BlockWrapper[0];
 		}
