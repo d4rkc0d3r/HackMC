@@ -188,6 +188,14 @@ public class Quarry {
 		return Math.abs(from.y - to.y) + 1;
 	}
 	
+	public BlockWrapper getFrom() {
+		return from.clone();
+	}
+	
+	public BlockWrapper getTo() {
+		return to.clone();
+	}
+	
 	public boolean isDone() {
 		return getCurrent() == null;
 	}

@@ -173,6 +173,10 @@ public class PlayerWrapper {
 //				"] [mouse=" + mouseClick + "] [shift=" + holdingShift + "]");
 		ctrl.windowClick(getOpenWindowId(), inventorySlot, mouseClick, (holdingShift) ? 1 : 0, player);
 	}
+
+	public InventoryHelper getInventoryHelper() {
+		return InventoryHelper.getInstance(this);
+	}
 	
 	/**
 	 * @return {@code new Vec3D(this.player)}

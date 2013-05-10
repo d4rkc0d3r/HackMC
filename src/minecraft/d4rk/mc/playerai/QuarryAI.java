@@ -1,5 +1,7 @@
 package d4rk.mc.playerai;
 
+import net.minecraft.src.Block;
+import net.minecraft.src.ItemStack;
 import d4rk.mc.BlockWrapper;
 import d4rk.mc.PlayerWrapper;
 import d4rk.mc.util.Vec3D;
@@ -51,18 +53,45 @@ public class QuarryAI extends BaseAI {
 		}
 		
 		if(lastY > current.y) {
-			//TODO: gather items on the ground
 			lastY = current.y;
+			startScript("nolog: chunk.collectitems"); //TODO: not only collect items in the chunk
+			return;
 		}
 		
-		//TODO: if inventory is full then deposit stuff in a chest if he has one in the hotbar
+		boolean isFull = true;
+		boolean hasChest = false;
+		for(int i = 0; i < pWrap.player.inventory.mainInventory.length; i++) {
+			ItemStack item = pWrap.player.inventory.mainInventory[i];
+			if(item == null) {
+				isFull = false;
+				break;
+			} else if(item.isItemEqual(new ItemStack(Block.chest))) {
+				hasChest = true;
+			}
+		}
+		if(isFull && hasChest) {
+			BlockWrapper[] stair = quarry.calculateStaircaise();
+			for(BlockWrapper step : stair) {
+				if(step.y - 1 == lastY) {
+					startScript("nolog: pathto " + step.getPositionString() + " 3.5",
+							"nolog: mineblock " + step.getString(),
+							"nolog: selectitem " + Block.chest.blockID,
+							"nolog: sleep 5",
+							"nolog: placeblock " + step.getString(),
+							"nolog: sleep 5",
+							"nolog: deposit " + step.getString() + " -1 27 true");
+					return;
+				}
+			}
+		}
 		
 		if(pWrap.getPosition().getY() > current.y + 8) {
 			int playerY = pWrap.getPosition().getY();
 			BlockWrapper[] stair = quarry.calculateStaircaise();
 			for(BlockWrapper step : stair) {
-				if(step.y + 7 > playerY) {
+				if(step.y < playerY - 4) {
 					startScript("nolog: pathto " + step.getPositionString());
+					return;
 				}
 			}
 		} else {

@@ -12,7 +12,7 @@ public class TaskSend extends ScriptTask {
 		for(int i=1;i<cmd.length;i++) {
 			sb.append(cmd[i]).append(" ");
 		}
-		message = sb.toString();
+		message = sb.toString().trim();
 	}
 
 	public TaskSend(String name) {

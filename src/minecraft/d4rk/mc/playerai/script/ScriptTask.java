@@ -50,7 +50,6 @@ public abstract class ScriptTask extends BaseAI {
 	
 	protected void done(String ret) {
 		isDone = true;
-		isStopped = true;
 		retValue = ret;
 	}
 	
@@ -95,6 +94,9 @@ public abstract class ScriptTask extends BaseAI {
 		new TaskActivateNearestLift("usenearestlift");
 		new TaskMineBlock("mineblock");
 		new TaskPathTo("pathto");
+		new TaskDeposit("deposit");
+		new TaskSneak("sneak");
+		new TaskPlaceBlock("placeblock");
 	}
 
 	static public final String ERROR = "ERROR";

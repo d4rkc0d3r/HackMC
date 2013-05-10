@@ -149,7 +149,7 @@ public class BlockWrapper {
 	 * Walk to block xy
 	 */
 	public String getPositionString() {
-		return String.format("%.2f %.2f %.2f", x+0.5, y+1.62+getBlock().getBlockBoundsMaxY(), z+0.5).replace(',', '.');
+		return String.format("%.2f %.2f %.2f", x+0.5, y+1.62+this.getCollisionBoxMaxY(), z+0.5).replace(',', '.');
 	}
 	
 	/**

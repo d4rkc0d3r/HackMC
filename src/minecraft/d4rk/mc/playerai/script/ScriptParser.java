@@ -369,7 +369,7 @@ public class ScriptParser {
 		return str.indexOf('(') != -1 && str.indexOf(')') != -1;
 	}
 	
-	private void log(String str) {
+	protected static void log(String str) {
 		Hack.log("[Script] " + str);
 	}
 	
