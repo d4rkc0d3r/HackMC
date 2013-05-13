@@ -73,7 +73,7 @@ public class QuarryAI extends BaseAI {
 			BlockWrapper[] stair = quarry.calculateStaircaise();
 			for(BlockWrapper step : stair) {
 				if(step.y - 1 == lastY) {
-					startScript("nolog: pathto " + step.getPositionString() + " 3.5",
+					startScript("nolog: pathto " + step.getPositionString() + " 3.8",
 							"nolog: mineblock " + step.getString(),
 							"nolog: selectitem " + Block.chest.blockID,
 							"nolog: sleep 5",
@@ -95,7 +95,7 @@ public class QuarryAI extends BaseAI {
 				}
 			}
 		} else {
-			startScript("nolog: pathto " + current.getPositionString() + " 3.5",
+			startScript("nolog: pathto " + current.getPositionString() + " 3.8",
 					"nolog: mineblock " + current.getString());
 		}
 	}

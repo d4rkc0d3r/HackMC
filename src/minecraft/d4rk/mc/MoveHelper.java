@@ -195,13 +195,13 @@ public class MoveHelper {
 			player.motionY = 0.2D;
 			vec.y = 0;
 			if(vec.getLen()==0) return;
-			vec.setLen(0.03F);
+			vec.setLen(0.02F);
 			player.addVelocity(vec.x, 0, vec.z);
 		}
 		else if(this.getMaterialRelative(0, 1, 0).isLiquid()) {
 			vec.y = 0;
 			if(vec.getLen()==0) return;
-			vec.setLen(0.04F);
+			vec.setLen(0.03F);
 			player.addVelocity(vec.x, 0, vec.z);
 		}
 		else {

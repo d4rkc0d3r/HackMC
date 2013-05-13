@@ -46,9 +46,9 @@ public class TaskDeposit extends ScriptTask {
 
 		new Deposit(pWrap, id, count, ignoreHotbar).doOperation();
 		
-		startScript("nolog: sleep 3",
+		startScript("nolog: sleep 10",
 				"nolog: send /close guiscreen",
-				"nolog: sleep 1");
+				"nolog: sleep 3");
 		
 		done();
 		isStopped = true;
