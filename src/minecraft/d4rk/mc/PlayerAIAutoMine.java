@@ -165,7 +165,7 @@ public class PlayerAIAutoMine extends PlayerAI {
 		block.getRelative(s).setID(player.inventory.getCurrentItem().itemID);
 		Hack.addDelayedPacket((Packet)new Packet15Place(block.x, block.y, block.z,
 							  s, player.inventory.getCurrentItem(),
-							  (float)off.x, (float)off.y, (float)off.z), 2);
+							  (float)off.x, (float)off.y, (float)off.z), 1);
 		ticksToStart = 2;
 	}
 	

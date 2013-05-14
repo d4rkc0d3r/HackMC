@@ -249,6 +249,20 @@ public class Hack {
 	 */
 	public static void onTick() {
 		mc.mcProfiler.startSection("hack");
+		mc.mcProfiler.startSection("sendqueue");
+		UniquePacket[] keys = delayedSendQueue.keySet().toArray(new UniquePacket[0]);
+		for(int i=0;i<keys.length;i++) {
+			UniquePacket p = keys[i];
+			if(p==null) continue;
+			int ticks = delayedSendQueue.get(p)-1;
+			if(ticks <= 0) {
+				mc.getNetHandler().addToSendQueue(p.getPacket());
+				delayedSendQueue.remove(p);
+			} else {
+				delayedSendQueue.put(p, new Integer(ticks));
+			}
+		}
+		mc.mcProfiler.endSection();// end section "sendqueue"
 		mc.mcProfiler.startSection("event");
 		EventManager.fireEvent(new TickEvent());
 		mc.mcProfiler.endSection(); // end section "event"
@@ -268,20 +282,6 @@ public class Hack {
 		if(myAI != null)
 			myAI.onTick();
 		mc.mcProfiler.endSection(); // end section "playerai"
-		mc.mcProfiler.startSection("sendqueue");
-		UniquePacket[] keys = delayedSendQueue.keySet().toArray(new UniquePacket[0]);
-		for(int i=0;i<keys.length;i++) {
-			UniquePacket p = keys[i];
-			if(p==null) continue;
-			int ticks = delayedSendQueue.get(p)-1;
-			if(ticks <= 0) {
-				mc.getNetHandler().addToSendQueue(p.getPacket());
-				delayedSendQueue.remove(p);
-			}
-			else
-				delayedSendQueue.put(p, new Integer(ticks));
-		}
-		mc.mcProfiler.endSection();// end section "sendqueue"
 		mc.mcProfiler.startSection("lagcalc");
 		tickDiff = mc.getSystemTime() - lastTick;
 		lastTick = mc.getSystemTime();

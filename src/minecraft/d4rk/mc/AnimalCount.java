@@ -19,7 +19,6 @@ public class AnimalCount {
     private World w;
     private int x;
     private int z;
-    private long lastExecution = 0;
     private boolean animalOnly = false;
     
     private AnimalCount() {
@@ -39,6 +38,32 @@ public class AnimalCount {
         x = player.chunkCoordX;
         z = player.chunkCoordZ;
         return this;
+    }
+    
+	private static void getChunkResult(Map<String, Integer> res, Chunk c) {
+		for (List<Entity> list : c.entityLists) {
+			for (Entity e : list) {
+				if (e != null) {
+					addOne(res, getKey(e));
+				}
+			}
+		}
+	}
+    
+	public static Map<String, Integer> getChunkResult(Chunk c) {
+		Map<String, Integer> res = new HashMap<String, Integer>();
+		getChunkResult(res, c);
+		return res;
+	}
+    
+    public static Map<String,Integer> getWorldResult(World w) {
+		Map<String, Integer> res = new HashMap<String, Integer>();
+    	for(Object obj : w.loadedEntityList) {
+    		if(obj != null) {
+    			addOne(res, getKey((Entity)obj));
+    		}
+    	}
+    	return res;
     }
     
     public void showChunkResult(Chunk c) {
@@ -70,8 +95,6 @@ public class AnimalCount {
     }
     
     public void checkWorld() {
-    	if((System.currentTimeMillis()-lastExecution)<500) return;
-    	lastExecution = System.currentTimeMillis();
     	result.clear();
     	Chunk c = w.getChunkFromChunkCoords(x,z);
     	if(countWorld(w))
@@ -79,8 +102,6 @@ public class AnimalCount {
     }
     
     public void checkChunk() {
-    	if((System.currentTimeMillis()-lastExecution)<500) return;
-    	lastExecution = System.currentTimeMillis();
     	result.clear();
     	Chunk c = w.getChunkFromChunkCoords(x,z);
     	if(countChunk(c))
@@ -109,7 +130,7 @@ public class AnimalCount {
     	return true;
     }
     
-    private String getKey(Entity e) {
+    private static String getKey(Entity e) {
     	if(e instanceof EntityPlayer) return "Player";
     	return EntityList.getEntityString(e);
     }
@@ -123,9 +144,13 @@ public class AnimalCount {
     }
     
     private void addOne(String entity) {
-    	Integer val = result.get(entity);
-    	result.put(entity, val == null ? 1 : 1+val);
+    	addOne(result, entity);
     }
+    
+	private static void addOne(Map<String, Integer> map, String entity) {
+		Integer val = map.get(entity);
+		map.put(entity, val == null ? 1 : 1 + val);
+	}
     
     private long getCount() {
     	long res = 0;

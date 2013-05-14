@@ -20,7 +20,9 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockSilverfish;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.PotionEffect;
 
 public class CommandManager {
 	static public boolean parseLocal(String str) { // true won't send it to the server
@@ -38,6 +40,11 @@ public class CommandManager {
 		}
 		if(cmd.equals("/ctps") && Permission.has(sender, rank, Permission.LOCALE)) {
 			ImproveChat.sendMessage(sender, "Current Client TPS: "+ round(20000.0D/Hack.last20Ticks.getSum(), 2));
+			return true;
+		}
+		if(cmd.equals("/nightvision") && Permission.has(sender, rank, Permission.LOCALE)) {
+			EntityPlayer p = Hack.pWrap.player;
+			p.addPotionEffect(new PotionEffect(16, 1 + 20 * 60 * 5));
 			return true;
 		}
 		if(cmd.startsWith("/sort chest") && Permission.has(sender, rank, Permission.LOCALE)) {
