@@ -34,8 +34,8 @@ public class SelectionSortChest extends Operation {
 		for (int j = 0; j < size - 1; j++) {
 			int swapIndex = j;
 			for (int i = j + 1; i < size; i++) {
-				if(((InventoryHelper.compareItemStack(inv.get(swapIndex), inv.get(i)) < 0) && up)
-						|| (!up && (InventoryHelper.compareItemStack(inv.get(swapIndex), inv.get(i)) > 0))) {
+				if(((ItemCompare.sort(inv.get(swapIndex), inv.get(i)) < 0) && up)
+						|| (!up && (ItemCompare.sort(inv.get(swapIndex), inv.get(i)) > 0))) {
 					swapIndex = i;
 				}
 			}

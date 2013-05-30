@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import d4rk.mc.event.listener.InventoryHelper;
 import d4rk.mc.inventory.FillChest;
+import d4rk.mc.inventory.RowSortChest;
 
 public class GuiChest extends GuiContainer
 {
@@ -44,7 +45,6 @@ public class GuiChest extends GuiContainer
         this.buttonList.add(new GuiButton(5, xPosRight, 0, 20, 20, ">"));
         this.buttonList.add(new GuiButton(6, xPosRight, 0, 20, 20, "="));
         this.buttonList.add(new GuiButton(7, xPosRight, 0, 20, 20, "| |"));
-        ((GuiButton)buttonList.get(6)).enabled = false;
         ((GuiButton)buttonList.get(7)).enabled = false;
     }
 
@@ -83,6 +83,7 @@ public class GuiChest extends GuiContainer
                     break;
 
                 case 6:
+                    InventoryHelper.getInstance().addToQueue(new RowSortChest());
                     break;
 
                 case 7:

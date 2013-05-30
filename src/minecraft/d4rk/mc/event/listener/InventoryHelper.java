@@ -97,41 +97,6 @@ public class InventoryHelper implements EventListener {
 		return false;
 	}
 	
-	public static int compareItemStack(ItemStack a, ItemStack b) {
-		if(a == null) {
-			return (b == null) ? 0 : -1;
-		}
-		if(b == null) {
-			return 1;
-		}
-		if(a.itemID == b.itemID) {
-			if(a.getItemDamage() == b.getItemDamage()) {
-				Map<Integer, Integer> aEnch = EnchantmentHelper.getEnchantments(a);
-				Map<Integer, Integer> bEnch = EnchantmentHelper.getEnchantments(b);
-				Set<Integer> allEnchIds = new TreeSet<Integer>();
-				allEnchIds.addAll(aEnch.keySet());
-				allEnchIds.addAll(bEnch.keySet());
-				for(Integer i : allEnchIds) {
-					Integer ae = aEnch.get(i);
-					Integer be = bEnch.get(i);
-					if(ae == be) {
-						continue;
-					} else if(ae == null) {
-						return -1;
-					} else if(be == null) {
-						return 1;
-					} else {
-						return (ae < be) ? 1 : -1;
-					}
-				}
-				return 0;
-			}
-			return (a.getItemDamage() < b.getItemDamage()) ? 1 : -1;
-		} else {
-			return (a.itemID < b.itemID) ? 1 : -1;
-		}
-	}
-	
 	public static void clearQueue() {
 		instance.queue.clear();
 		instance.processQueue = false;
