@@ -17,6 +17,7 @@ public class ItemCompare {
 			return a == b;
 		}
 		if(a.itemID == b.itemID) {
+			boolean checkDamage = true;
 			Set<Integer> aEnch = getEnchantments(a).keySet();
 			Set<Integer> bEnch = getEnchantments(b).keySet();
 			if(a.itemID == Item.enchantedBook.itemID) {
@@ -34,9 +35,7 @@ public class ItemCompare {
 						&& bEnch.contains(Enchantment.silkTouch.effectId)) {
 					return true;
 				}
-				return false;
-			}
-			if(a.getItem() instanceof ItemSword) {
+			} else if(a.getItem() instanceof ItemSword) {
 				if(aEnch.isEmpty() && bEnch.isEmpty()) {
 					return true;
 				}
@@ -44,12 +43,16 @@ public class ItemCompare {
 						&& bEnch.contains(Enchantment.looting.effectId)) {
 					return true;
 				}
+			}
+			if(a.getItem().isDamageable()) {
+				checkDamage = false;
+			}
+			if(!aEnch.isEmpty()) {
+				return !bEnch.isEmpty();
+			} else if(!bEnch.isEmpty()) {
 				return false;
 			}
-			if(aEnch.isEmpty() && bEnch.isEmpty()) {
-				return true;
-			}
-			return !aEnch.isEmpty() && !bEnch.isEmpty();
+			return (checkDamage) ? a.getItemDamage() == b.getItemDamage() : false;
 		}
 		return false;
 	}
