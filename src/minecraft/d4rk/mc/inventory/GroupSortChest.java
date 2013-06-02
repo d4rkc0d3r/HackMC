@@ -1,6 +1,7 @@
 package d4rk.mc.inventory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -28,21 +29,26 @@ public abstract class GroupSortChest extends Operation {
 	}
 	
 	protected Set<ItemGroup> getItemGroups() {
-		HashMap<ItemGroup, Integer> grps = new HashMap<ItemGroup, Integer>();
-		
+		HashSet<ItemGroup> grps = new HashSet<ItemGroup>();
 		List<ItemStack> inv = pWrap.player.openContainer.getInventory();
+		
 		for(int i = 0; i < inv.size() - 36; ++i) {
-			ItemGroup group = new ItemGroup(inv.get(i));
-			Integer count = grps.get(group);
-			grps.put(group, (count == null) ? 1 : count + 1);
+			boolean wasAdded = false;
+			ItemStack item = inv.get(i);
+			ItemGroup group = new ItemGroup(item);
+			for(ItemGroup grp : grps) {
+				if(grp.equals(group)) {
+					grp.add(item);
+					break;
+				}
+			}
+			if(!wasAdded) {
+				grps.add(group.add(item));
+			}
 		}
 		
 		TreeSet<ItemGroup> sorted_grps = new TreeSet<ItemGroup>();
-		
-		for(Entry<ItemGroup, Integer> e : grps.entrySet()) {
-			sorted_grps.add(e.getKey().setCount(e.getValue()));
-		}
-		
+		sorted_grps.addAll(grps);
 		return sorted_grps;
 	}
 }

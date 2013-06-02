@@ -11,53 +11,50 @@ import net.minecraft.src.ItemTool;
 import net.minecraft.src.ItemSword;
 import static net.minecraft.src.EnchantmentHelper.getEnchantments;
 
-public class ItemCompare {
-	public static boolean sameItemGroup(ItemStack a, ItemStack b) {
-		if(a == null || b == null) {
-			return a == b;
-		}
-		if(a.itemID == b.itemID) {
-			boolean checkDamage = true;
-			Set<Integer> aEnch = getEnchantments(a).keySet();
-			Set<Integer> bEnch = getEnchantments(b).keySet();
-			if(a.itemID == Item.enchantedBook.itemID) {
-				return aEnch.equals(bEnch);
-			}
-			if(a.getItem() instanceof ItemTool) {
-				if(aEnch.isEmpty() && bEnch.isEmpty()) {
-					return true;
-				}
-				if(aEnch.contains(Enchantment.fortune.effectId)
-						&& bEnch.contains(Enchantment.fortune.effectId)) {
-					return true;
-				}
-				if(aEnch.contains(Enchantment.silkTouch.effectId)
-						&& bEnch.contains(Enchantment.silkTouch.effectId)) {
-					return true;
-				}
-			} else if(a.getItem() instanceof ItemSword) {
-				if(aEnch.isEmpty() && bEnch.isEmpty()) {
-					return true;
-				}
-				if(aEnch.contains(Enchantment.looting.effectId)
-						&& bEnch.contains(Enchantment.looting.effectId)) {
-					return true;
-				}
-			}
-			if(a.getItem().isDamageable()) {
-				checkDamage = false;
-			}
-			if(!aEnch.isEmpty()) {
-				return !bEnch.isEmpty();
-			} else if(!bEnch.isEmpty()) {
-				return false;
-			}
-			return (checkDamage) ? a.getItemDamage() == b.getItemDamage() : false;
-		}
-		return false;
+public class ItemCompare implements Comparable<ItemCompare> {
+	private ItemStack item;
+	private int hashCode;
+	private String toString;
+	
+	public ItemCompare(ItemStack item) {
+		this.item = item;
+		this.hashCode = 0xc0d3b4b3 ^ ((item == null) ? 0 :item.itemID * 0xb00b);
+		this.toString = (item == null) ? "Air" : item.getDisplayName();
 	}
 	
-	public static int sort(ItemStack a, ItemStack b) {
+	public ItemStack getItem() {
+		return item;
+	}
+	
+	@Override
+	public String toString() {
+		return toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof ItemCompare) ? equals(item, ((ItemCompare)o).item) : false;
+	}
+
+	@Override
+	public int compareTo(ItemCompare o) {
+		return compare(item, o.item);
+	}
+	
+	public static boolean equals(ItemStack a, ItemStack b) {
+		return compare(a, b, true) == 0;
+	}
+	
+	public static int compare(ItemStack a, ItemStack b) {
+		return compare(a, b, false);
+	}
+	
+	public static int compare(ItemStack a, ItemStack b, boolean ignoreStackSize) {
 		if(a == null) {
 			return (b == null) ? 0 : -1;
 		}
@@ -84,7 +81,8 @@ public class ItemCompare {
 						return (ae < be) ? 1 : -1;
 					}
 				}
-				return 0;
+				return (ignoreStackSize || a.stackSize == b.stackSize) ? 0
+						: (a.stackSize < b.stackSize) ? -1 : 1;
 			}
 			return (a.getItemDamage() < b.getItemDamage()) ? 1 : -1;
 		} else {

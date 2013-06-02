@@ -1,6 +1,9 @@
 package d4rk.mc.inventory;
 
+import java.util.List;
+
 import d4rk.mc.PlayerWrapper;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.Packet;
 
 public abstract class Operation {
@@ -48,6 +51,76 @@ public abstract class Operation {
 	 */
 	public final void setPlayerWrapper(PlayerWrapper pWrap) {
 		this.pWrap = pWrap;
+	}
+	
+	public int swapInInventory(int indexA, int indexB) {
+		try {
+			List<ItemStack> inv = pWrap.player.openContainer.getInventory();
+			
+			ItemStack a = inv.get(indexA);
+			ItemStack b = inv.get(indexB);
+			
+			if(indexA == indexB) {
+				return 0;
+			}
+			
+			if(ItemCompare.equals(a, b)) {
+				if(a == null) {
+					return 0;
+				} else if(a.stackSize == a.getItem().getItemStackLimit()) {
+					if(b.stackSize == a.stackSize) {
+						return 0;
+					}
+					pWrap.windowClick(indexA);
+					pWrap.windowClick(indexB);
+					pWrap.windowClick(indexA);
+					return 3;
+				} else if(b.stackSize == b.getItem().getItemStackLimit()) {
+					if(b.stackSize == a.stackSize) {
+						return 0;
+					}
+					pWrap.windowClick(indexB);
+					pWrap.windowClick(indexA);
+					pWrap.windowClick(indexB);
+					return 3;
+				} else {
+					int nullIndex = inv.indexOf(null);
+					if(nullIndex != -1) {
+						int count = swapInInventory(indexA, nullIndex);
+						count += swapInInventory(indexA, indexB);
+						return count + swapInInventory(indexB, nullIndex);
+					} else {
+						for(int i = 0; i < inv.size(); ++i) {
+							if(i == indexA || i == indexB || ItemCompare.equals(a, inv.get(i))) {
+								continue;
+							}
+							int count = swapInInventory(indexA, i);
+							count += swapInInventory(indexA, indexB);
+							return count + swapInInventory(indexB, i);
+						}
+						return -1;
+					}
+				}
+			} else {
+				if(a == null) {
+					pWrap.windowClick(indexB);
+					pWrap.windowClick(indexA);
+					return 2;
+				} else if(b == null) {
+					pWrap.windowClick(indexA);
+					pWrap.windowClick(indexB);
+					return 2;
+				} else {
+					pWrap.windowClick(indexA);
+					pWrap.windowClick(indexB);
+					pWrap.windowClick(indexA);
+					return 3;
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 	protected void done() {

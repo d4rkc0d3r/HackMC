@@ -50,19 +50,23 @@ public class RowSortChest extends GroupSortChest {
 		
 		if(simpleLinesNeeded <= size / 9) {
 			int invIndex = 0;
-			for(ItemGroup i : itemGroups) {
-				int end = invIndex + i.getCount();
-				int airEnd = invIndex + (i.getCount() / 9) * 9 + ((i.getCount() % 9 == 0) ? 0 : 9);
+			for(ItemGroup iGroup : itemGroups) {
+				int end = invIndex + iGroup.getCount();
+				int airEnd = invIndex + (iGroup.getCount() / 9) * 9 + ((iGroup.getCount() % 9 == 0) ? 0 : 9);
 				for(;invIndex < end; ++invIndex) {
-					if(i.equals(new ItemGroup(inv.get(invIndex)))) {
-						continue;
-					}
-					for(int search = invIndex + 1; search < size; ++search) {
-						if(i.equals(new ItemGroup(inv.get(search)))) {
-							pWrap.swapInInventory(invIndex, search);
-							inv = pWrap.player.openContainer.getInventory();
-							return; // so we can see it step by step ;)
+					int iSwap = -1;
+					for(int search = invIndex; search < size; ++search) {
+						if(iGroup.equals(new ItemGroup(inv.get(search)))) {
+							if(iSwap == -1) {
+								iSwap = search;
+							} else if(ItemCompare.compare(inv.get(iSwap), inv.get(search)) < 0) {
+								iSwap = search;
+							}
 						}
+					}
+					if(swapInInventory(invIndex, iSwap) > 0) {
+						inv = pWrap.player.openContainer.getInventory();
+						return; // so we can see it step by step ;)
 					}
 				}
 				for(;invIndex < airEnd; ++invIndex) {
@@ -71,7 +75,7 @@ public class RowSortChest extends GroupSortChest {
 					}
 					for(int search = invIndex + 1; search < size; ++search) {
 						if(inv.get(search) == null) {
-							pWrap.swapInInventory(invIndex, search);
+							swapInInventory(invIndex, search);
 							inv = pWrap.player.openContainer.getInventory();
 							//return; // so we can see it step by step ;)
 						}
