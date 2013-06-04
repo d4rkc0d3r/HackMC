@@ -45,55 +45,66 @@ public class GuiChest extends GuiContainer
         this.buttonList.add(new GuiButton(5, xPosRight, 0, 20, 20, ">"));
         this.buttonList.add(new GuiButton(6, xPosRight, 0, 20, 20, "="));
         this.buttonList.add(new GuiButton(7, xPosRight, 0, 20, 20, "| |"));
+        this.buttonList.add(new GuiButton(8, xPosRight, 0, 20, 20, "U"));
         ((GuiButton)buttonList.get(7)).enabled = false;
+        ((GuiButton)buttonList.get(8)).enabled = false;
+        InventoryHelper.resetUndo();
+    }
+    
+    @Override
+    public void onGuiClosed() {
+    	super.onGuiClosed();
+    	InventoryHelper.clearQueue();
+    	InventoryHelper.resetUndo();
     }
 
     /**
      * Fired when a control is clicked. This is the equivalent of
      * ActionListener.actionPerformed(ActionEvent e).
      */
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        if (par1GuiButton.enabled)
-        {
-            switch (par1GuiButton.id)
-            {
-                case 0:
-                    this.mc.thePlayer.sendChatMessage("/close guiscreen");
-                    break;
+	protected void actionPerformed(GuiButton par1GuiButton) {
+		if (par1GuiButton.enabled) {
+			switch (par1GuiButton.id) {
+			case 0:
+				this.mc.thePlayer.sendChatMessage("/close guiscreen");
+				break;
 
-                case 1:
-                    this.mc.thePlayer.sendChatMessage("/withdraw all");
-                    break;
+			case 1:
+				this.mc.thePlayer.sendChatMessage("/withdraw all");
+				break;
 
-                case 2:
-                    this.mc.thePlayer.sendChatMessage("/deposit all");
-                    break;
+			case 2:
+				this.mc.thePlayer.sendChatMessage("/deposit all");
+				break;
 
-                case 3:
-                    InventoryHelper.getInstance().addToQueue(new FillChest(false));
-                    break;
+			case 3:
+				InventoryHelper.getInstance().addToQueue(new FillChest(false));
+				break;
 
-                case 4:
-                    this.mc.thePlayer.sendChatMessage("/sort chest up");
-                    break;
+			case 4:
+				this.mc.thePlayer.sendChatMessage("/sort chest up");
+				break;
 
-                case 5:
-                    this.mc.thePlayer.sendChatMessage("/sort chest down");
-                    break;
+			case 5:
+				this.mc.thePlayer.sendChatMessage("/sort chest down");
+				break;
 
-                case 6:
-                    InventoryHelper.getInstance().addToQueue(new RowSortChest());
-                    break;
+			case 6:
+				InventoryHelper.getInstance().addToQueue(new RowSortChest());
+				break;
 
-                case 7:
-                    break;
+			case 7:
+				break;
 
-                default:
-                    break;
-            }
-        }
-    }
+			case 8:
+				InventoryHelper.getInstance().undo();
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
 
     @Override
     public void drawScreen(int par1, int par2, float par3)
@@ -105,6 +116,8 @@ public class GuiChest extends GuiContainer
             GuiButton btn = (GuiButton)this.buttonList.get(i);
             btn.yPosition = ((i > 3) ? i - 4 : i) * 20 + off;
         }
+        
+        ((GuiButton)buttonList.get(8)).enabled = InventoryHelper.canUndo();
 
         super.drawScreen(par1, par2, par3);
     }

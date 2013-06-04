@@ -1,8 +1,10 @@
 package d4rk.mc.inventory;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import d4rk.mc.PlayerWrapper;
+import d4rk.mc.util.Pair;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Packet;
 
@@ -10,6 +12,7 @@ public abstract class Operation {
 	protected PlayerWrapper pWrap;
 	protected int inventoryType;
 	private boolean isDone = false;
+	private LinkedList<Pair<Integer, Integer>> undoList = new LinkedList<Pair<Integer, Integer>>();
 
 	public Operation(PlayerWrapper pWrap, int inventoryType) {
 		this.pWrap = pWrap;
@@ -46,14 +49,34 @@ public abstract class Operation {
 	 * {@link OperationList#add(Operation)}so you can actually call the
 	 * {@link #constructor(PlayerWrapper, int) Constructor} with an {@code null}
 	 * argument.
-	 * 
-	 * @param pWrap
 	 */
 	public final void setPlayerWrapper(PlayerWrapper pWrap) {
 		this.pWrap = pWrap;
 	}
 	
+	/**
+	 * Swaps the content of the two slots indexed by the two parameters in the
+	 * currently open inventory of the {@link Operation#pWrap pWrap} instance.<br>
+	 * Returns -1 on failure. This happens if at least one of the two parameter
+	 * indexes are out of bounds of the inventory array. Or it can not swap the
+	 * two stacks. This only occurs if the whole inventory is filled with the
+	 * same items and there is not a single full stack of it in the inventory.
+	 * 
+	 * @return number of mouse clicks performed or -1 if the swap failed
+	 */
 	public int swapInInventory(int indexA, int indexB) {
+		int ret = swapInInventoryWorker(indexA, indexB);
+		if(ret > 0) {
+			undoList.addLast(new Pair(indexA, indexB));
+		}
+		return ret;
+	}
+	
+	public LinkedList<Pair<Integer, Integer>> getUndoList() {
+		return undoList;
+	}
+	
+	private int swapInInventoryWorker(int indexA, int indexB) {
 		try {
 			List<ItemStack> inv = pWrap.player.openContainer.getInventory();
 			
@@ -86,17 +109,18 @@ public abstract class Operation {
 				} else {
 					int nullIndex = inv.indexOf(null);
 					if(nullIndex != -1) {
-						int count = swapInInventory(indexA, nullIndex);
-						count += swapInInventory(indexA, indexB);
-						return count + swapInInventory(indexB, nullIndex);
+						int count = swapInInventoryWorker(indexA, nullIndex);
+						count += swapInInventoryWorker(indexA, indexB);
+						return count + swapInInventoryWorker(indexB, nullIndex);
 					} else {
 						for(int i = 0; i < inv.size(); ++i) {
-							if(i == indexA || i == indexB || ItemCompare.equals(a, inv.get(i))) {
+							if(i == indexA || i == indexB || (ItemCompare.equals(a, inv.get(i))
+									&& (inv.get(i).stackSize != inv.get(i).getItem().getItemStackLimit()))) {
 								continue;
 							}
-							int count = swapInInventory(indexA, i);
-							count += swapInInventory(indexA, indexB);
-							return count + swapInInventory(indexB, i);
+							int count = swapInInventoryWorker(indexA, i);
+							count += swapInInventoryWorker(indexA, indexB);
+							return count + swapInInventoryWorker(indexB, i);
 						}
 						return -1;
 					}
@@ -118,7 +142,6 @@ public abstract class Operation {
 				}
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
 			return -1;
 		}
 	}

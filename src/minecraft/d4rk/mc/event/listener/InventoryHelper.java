@@ -25,12 +25,15 @@ import d4rk.mc.event.PreSendPacketEvent;
 import d4rk.mc.event.TickEvent;
 import d4rk.mc.inventory.Click;
 import d4rk.mc.inventory.Operation;
+import d4rk.mc.inventory.UndoOperation;
+import d4rk.mc.util.Pair;
 
 public class InventoryHelper implements EventListener {
 	private PlayerWrapper pWrap = null;
 	private LinkedList<Operation> queue = new LinkedList();
 	private boolean processQueue = false;
 	private int inventoryType = -1;
+	private LinkedList<Pair<Integer, Integer>> undoList = new LinkedList<Pair<Integer, Integer>>();
 	
 	public InventoryHelper() {
 		pWrap = Hack.getPlayerWrapper();
@@ -57,7 +60,7 @@ public class InventoryHelper implements EventListener {
 
 		try {
 			for (int i = 0; i < 1; i++) {
-				Operation op = queue.get(0);
+				Operation op = queue.getFirst();
 
 				if (!op.canDoOperation(inventoryType)) {
 					processQueue = false;
@@ -66,10 +69,15 @@ public class InventoryHelper implements EventListener {
 
 				op.doOperation();
 
-				if (op.isDone())
+				if (op.isDone()) {
+					if(op instanceof UndoOperation) {
+						undoList.clear();
+					}
+					undoList.addAll(op.getUndoList());
 					queue.removeFirst();
+				}
 			}
-		} catch (IndexOutOfBoundsException e) {
+		} catch (NoSuchElementException e) {
 			processQueue = false;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -95,6 +103,18 @@ public class InventoryHelper implements EventListener {
 	@Override
 	public boolean isDestroyed() {
 		return false;
+	}
+	
+	public void undo() {
+		addToQueue(new UndoOperation(pWrap, undoList));
+	}
+	
+	public static boolean canUndo() {
+		return !instance.undoList.isEmpty() && !instance.processQueue;
+	}
+	
+	public static void resetUndo() {
+		instance.undoList.clear();
 	}
 	
 	public static void clearQueue() {
