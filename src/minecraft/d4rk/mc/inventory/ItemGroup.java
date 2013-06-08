@@ -3,11 +3,13 @@ package d4rk.mc.inventory;
 import static net.minecraft.src.EnchantmentHelper.getEnchantments;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import net.minecraft.src.Enchantment;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemArmor;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ItemSword;
 import net.minecraft.src.ItemTool;
@@ -18,6 +20,7 @@ public class ItemGroup implements Comparable<ItemGroup> {
 	
 	private final ItemStack ref;
 	private final List<ItemCompare> items = new ArrayList<ItemCompare>();
+	private boolean isItemListSorted = true;
 
 	public ItemGroup(ItemStack ref) {
 		this.ref = ref;
@@ -27,7 +30,23 @@ public class ItemGroup implements Comparable<ItemGroup> {
 	
 	public ItemGroup add(ItemStack item) {
 		items.add(new ItemCompare(item));
+		isItemListSorted = false;
 		return this;
+	}
+	
+	public List<ItemStack> getItems() {
+		List<ItemStack> ret = new ArrayList<ItemStack>(items.size());
+		
+		if(!isItemListSorted) {
+			Collections.sort(items, Collections.reverseOrder());
+			isItemListSorted = true;
+		}
+		
+		for(int i = 0; i < items.size(); ++i) {
+			ret.add(items.get(i).getItem());
+		}
+		
+		return ret;
 	}
 	
 	public int getCount() {
@@ -98,7 +117,7 @@ public class ItemGroup implements Comparable<ItemGroup> {
 					return true;
 				}
 			}
-			if(a.getItem().isDamageable()) {
+			if(a.getItem().isDamageable() || a.getItem() instanceof ItemArmor) {
 				checkDamage = false;
 			}
 			if(!aEnch.isEmpty()) {
