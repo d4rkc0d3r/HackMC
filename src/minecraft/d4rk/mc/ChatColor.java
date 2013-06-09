@@ -66,28 +66,39 @@ public enum ChatColor {
 	}
 	
 	public static String formatSubstring(final String str, final String sub, final ChatColor format) {
-		return formatSubstring(str, sub, format.toString);
+		return formatSubstring(str, sub, RESET + format.toString);
 	}
 	
 	public static String formatSubstring(final String str, final String sub, final String format) {
 		StringBuilder sb = new StringBuilder();
-		formatSubstringRecursiv(sb, str, sub, format);
+		formatSubstringRecursiv(sb, str, sub, format, false);
 		return sb.toString();
 	}
 	
-	private static void formatSubstringRecursiv(StringBuilder sb, final String str, final String sub, final String format) {
-		int index = str.indexOf(sub);
-		if(index == -1) {
+	public static String formatSubstringIgnoreCase(final String str, final String sub, final ChatColor format) {
+		return formatSubstringIgnoreCase(str, sub, RESET + format.toString);
+	}
+	
+	public static String formatSubstringIgnoreCase(final String str, final String sub, final String format) {
+		StringBuilder sb = new StringBuilder();
+		formatSubstringRecursiv(sb, str, sub, format, true);
+		return sb.toString();
+	}
+	
+	private static void formatSubstringRecursiv(StringBuilder sb, final String str, final String sub, final String format, boolean ignoreCase) {
+		int index = (ignoreCase) ? str.toLowerCase().indexOf(sub.toLowerCase()) : str.indexOf(sub);
+		if(index == -1 || sub.isEmpty()) {
 			sb.append(str);
 			return;
 		}
 		String pre = str.substring(0, index);
 		sb.append(pre);
-		sb.append(RESET);
 		sb.append(format);
-		sb.append(sub);
-		sb.append(getColorAndFormatting(pre));
-		formatSubstringRecursiv(sb, str.substring(index+sub.length()), sub, format);
+		sb.append((ignoreCase) ? str.substring(index, index + sub.length()) : sub);
+		if(index + sub.length() < str.length()) {
+			sb.append(getColorAndFormatting(pre));
+			formatSubstringRecursiv(sb, str.substring(index + sub.length()), sub, format, ignoreCase);
+		}
 	}
 	
 	public static String getColorAndFormatting(final String str) {

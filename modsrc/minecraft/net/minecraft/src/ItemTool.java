@@ -163,12 +163,8 @@ public class ItemTool extends Item
 
 				if (!player.username.equals(mc.thePlayer.username)) {
 					y += 1.62;
-				} else {
-					y -= 1.6;
-					x -= look.xCoord * ((yCoord < 0) ? (-yCoord) : 0);
-					z -= look.zCoord * ((yCoord < 0) ? (-yCoord) : 0);
-					look.xCoord *= 0.6;
-					look.zCoord *= 0.6;
+				} else if(mc.gameSettings.thirdPersonView == 0) { // first person view
+					return;
 				}
 
 				look.rotateAroundY((float) (Math.PI / 2));
@@ -176,7 +172,7 @@ public class ItemTool extends Item
 				look.zCoord = look.zCoord * 0.3;
 				Random rnd = new Random(Double.doubleToLongBits(x + y + z));
 
-				for (int i = 0; i < ((fps > 40) ? 5 : 2); i++) {
+				for (int i = 0; i < ((fps > 40) ? 4 : 1); i++) {
                     mc.theWorld.spawnParticle("smoke",
                             x - 0.1 + rnd.nextDouble() * 0.2 + look.xCoord,
                             y - 0.1 + rnd.nextDouble() * 0.2,

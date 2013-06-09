@@ -2,6 +2,7 @@ package d4rk.mc.event.listener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +20,12 @@ import net.minecraft.src.GuiTextField;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Packet130UpdateSign;
 import net.minecraft.src.Packet132TileEntityData;
+import net.minecraft.src.Packet9Respawn;
 import net.minecraft.src.RenderHelper;
 import d4rk.mc.BlockWrapper;
 import d4rk.mc.ChatColor;
 import d4rk.mc.ChestShop;
+import d4rk.mc.ImproveChat;
 import d4rk.mc.Permission;
 import d4rk.mc.PlayerString;
 import d4rk.mc.Shop;
@@ -38,11 +41,13 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	private GuiTextField itemNameField;
 	private GuiTextField modeField;
 	private boolean isGuiOpen = false;
-	private String modeText = "name";
+	private String modeText = "check";
 	private String itemNameText = "";
 	private List<String> possibleModes = new ArrayList();
 	private int inputGuiTop = 35;
 	private long lastOperationDuration = 0;
+	private Iterator<String> autoComplete = null;
+	private int autoCompleteIndex = -1;
 	
 	private Set<String> itemNameResultSet = new TreeSet();
 	private List<String> viewResult = new ArrayList();
@@ -73,6 +78,9 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
         this.modeField.setTextColor(16777215);
         this.modeField.setText(modeText);
         
+        autoComplete = null;
+        autoCompleteIndex = -1;
+        
         isGuiOpen = true;
         updateResult();
         
@@ -93,10 +101,40 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	
 	@Override
 	protected void keyTyped(char par1, int par2) {
-		if(par2 == 15) { // tab key was pressed
+		if(par2 == Keyboard.KEY_TAB) { // tab key was pressed
 			if(itemNameField.isFocused()) {
 				if(itemNameResultSet.size() > 0) {
-					itemNameField.setText(itemNameResultSet.iterator().next());
+					if(autoComplete == null || !autoComplete.hasNext()) {
+						autoComplete = itemNameResultSet.iterator();
+						autoCompleteIndex = -1;
+					}
+					++autoCompleteIndex;
+					String newName = autoComplete.next();
+					long startTime = System.nanoTime();
+			        if(modeText.equalsIgnoreCase("buy") || modeText.equalsIgnoreCase("sell")) {
+						viewResult.clear();
+						count = 20;
+						addToResult(modeText, newName);
+					} else if(modeText.equalsIgnoreCase("check")) {
+						viewResult.clear();
+						count = 8;
+						addToResult("buy", newName);
+						addToResult("sell", newName);
+					}
+			        lastOperationDuration = (System.nanoTime() - startTime) / 1000;
+			        int i = newName.toLowerCase().indexOf(itemNameText.toLowerCase());
+			        StringBuilder sb = new StringBuilder();
+			        if(i > 0) {
+			        	sb.append(ChatColor.RED);
+			        	sb.append(newName.substring(0, i));
+			        }
+		        	sb.append(ChatColor.WHITE);
+		        	sb.append(newName.substring(i, i + itemNameText.length()));
+		        	if(i + itemNameText.length() < newName.length()) {
+			        	sb.append(ChatColor.RED);
+			        	sb.append(newName.substring(i + itemNameText.length()));
+		        	}
+			        itemNameField.setText(sb.toString());
 				}
 			} else if(modeField.isFocused()) {
 				itemNameField.setFocused(true);
@@ -104,12 +142,23 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 			} else {
 				modeField.setFocused(true);
 			}
-		}
-		
-		if(itemNameField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2) || par2 == 15) {
+		} else if(par2 == Keyboard.KEY_RETURN) {
+			if(autoCompleteIndex != -1) {
+				itemNameText = ChatColor.remove(itemNameField.getText());
+				itemNameField.setText(itemNameText);
+				autoComplete = null;
+				autoCompleteIndex = -1;
+			}
+		} else if(itemNameField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2)) {
 			if(!modeText.equals(modeField.getText()) || !itemNameText.equals(itemNameField.getText())) {
 				modeText = modeField.getText();
-				itemNameText = itemNameField.getText();
+				if(autoCompleteIndex != -1) {
+					itemNameField.setText(itemNameText);
+					autoComplete = null;
+					autoCompleteIndex = -1;
+				} else {
+					itemNameText = itemNameField.getText();
+				}
 				updateResult();
 			}
 		}
@@ -119,15 +168,6 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
-
-		drawString(fontRenderer, "Time needed: " + getTimeNeeded(), width / 2 - 160, 8, 16777215);
-		drawString(fontRenderer, "Total shop count: " + shopList.size(), width / 2, 8, 16777215);
-		
-		drawString(fontRenderer, "Item Name", width / 2 - 160, inputGuiTop - 12, 16777215);
-		itemNameField.drawTextBox();
-		
-		drawString(fontRenderer, "Mode", width / 2 - 160, inputGuiTop + 18, 16777215);
-		modeField.drawTextBox();
 		
 		if(!possibleModes.contains(modeField.getText().toLowerCase())) {
 			drawTooltip(possibleModes, width / 2 - 159, inputGuiTop + 51);
@@ -144,11 +184,23 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 				}
 				int i = 0;
 				for(String s : itemNameResultSet) {
+					if(i == autoCompleteIndex) {
+						drawString(fontRenderer, "=>", width / 2 - 175, inputGuiTop + 50 + i * 12, 16777215);
+					}
 					drawString(fontRenderer, s, width / 2 - 160, inputGuiTop + 50 + i * 12, 16777215);
 					++i;
 				}
 			}
 		}
+
+		drawString(fontRenderer, "Time needed: " + getTimeNeeded(), width / 2 - 160, 8, 16777215);
+		drawString(fontRenderer, "Total shop count: " + shopList.size(), width / 2, 8, 16777215);
+		
+		drawString(fontRenderer, "Item Name", width / 2 - 160, inputGuiTop - 12, 16777215);
+		itemNameField.drawTextBox();
+		
+		drawString(fontRenderer, "Mode", width / 2 - 160, inputGuiTop + 18, 16777215);
+		modeField.drawTextBox();
 		
 		super.drawScreen(par1, par2, par3);
 	}
@@ -184,12 +236,14 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	}
 	
 	public void addToResult(String modeText) {
+		addToResult(modeText, itemNameText);
+	}
+	
+	public void addToResult(String modeText, String name) {
 		if(modeText.equalsIgnoreCase("buy") || modeText.equalsIgnoreCase("sell")) {
 			boolean isSell = modeText.equalsIgnoreCase("sell");
 			boolean up = isSell;
 			List<Pair<Double, Shop>> list = new LinkedList();
-			
-			String name = itemNameText;
 			
 			// Initializing the list with the prices.
 			for (Shop cs : shopList) {
@@ -237,6 +291,7 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 			int perCountItems = 64;
 			for(int i = 0; i < count; i++) {
 				Pair<Double, Shop> e = list.get(i);
+				perCountItems = (e.getFirst() >= 1.2D) ? 1 : 64;
 				viewResult.add(String.format(" %.2f/", e.getFirst() * perCountItems)
 						+ perCountItems + " at " + e.getSecond().getBlock() 
 						+ " from " + e.getSecond().getUserName());
@@ -260,6 +315,13 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 		}
 		
 		return str + " ms";
+	}
+	
+	public void onRespawn(PostProcessPacketEvent event) {
+		if(!(event.getPacket() instanceof Packet9Respawn)) {
+			return;
+		}
+		shopList.clear();
 	}
 	
 	public void onSignUpdate(PostProcessPacketEvent event) {

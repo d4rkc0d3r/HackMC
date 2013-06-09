@@ -432,14 +432,13 @@ public class BlockWrapper {
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj == null) return false;
-		if(!(obj instanceof BlockWrapper)) return false;
+		if(obj == null || !(obj instanceof BlockWrapper)) return false;
 		BlockWrapper b = (BlockWrapper)obj;
-		return world == b.world && x == b.x && y == b.y && z == b.z;
+		return (ignoreWorld || world == b.world) && x == b.x && y == b.y && z == b.z;
 	}
 	
 	public int hashCode() {
-		return x ^ (z<<12) ^ (y<<24) ^ ((world != null && !ignoreWorldInHashCode) ? world.hashCode() : 0);
+		return x ^ (z<<12) ^ (y<<24) ^ ((world != null && !ignoreWorld) ? world.hashCode() : 0);
 	}
 	
 	public static BlockWrapper getNearestMinable(Vec3D pos, BlockWrapper[] array) {
@@ -496,7 +495,7 @@ public class BlockWrapper {
 		Block.bedrock.blockID
 	};
 	
-	public static boolean ignoreWorldInHashCode = false;
+	public static boolean ignoreWorld = false;
 
 	public static final int INSIDE = -1;
 	public static final int POSY = 0;
