@@ -101,6 +101,7 @@ public class EventManager {
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new ParticelMarker());
 		registerEvents(new McmmoGui());
+		registerEvents(new AutoTool());
 	}
 
 	private static boolean isSubClassOf(Class check, Class sup) {

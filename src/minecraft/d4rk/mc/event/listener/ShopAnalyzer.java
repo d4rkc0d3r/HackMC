@@ -148,6 +148,7 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 				itemNameField.setText(itemNameText);
 				autoComplete = null;
 				autoCompleteIndex = -1;
+				updateResult();
 			}
 		} else if(itemNameField.textboxKeyTyped(par1, par2) || modeField.textboxKeyTyped(par1, par2)) {
 			if(!modeText.equals(modeField.getText()) || !itemNameText.equals(itemNameField.getText())) {

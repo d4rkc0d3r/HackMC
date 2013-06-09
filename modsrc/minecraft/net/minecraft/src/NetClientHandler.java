@@ -721,6 +721,11 @@ public class NetClientHandler extends NetHandler
                     System.out.println("p.getZPosition(): " + p.getZPosition());
                     System.out.println("p.getItemStack(): " + p.getItemStack());
                 }
+                else if (par1Packet instanceof Packet14BlockDig && true)
+                {
+                	Packet14BlockDig p = (Packet14BlockDig)par1Packet;
+                    System.out.println("p.status: " + p.status);
+                }
                 else if (par1Packet instanceof Packet102WindowClick)
                 {
                     Packet102WindowClick p = (Packet102WindowClick)par1Packet;

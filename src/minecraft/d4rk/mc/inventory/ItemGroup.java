@@ -108,7 +108,9 @@ public class ItemGroup implements Comparable<ItemGroup> {
 						&& bEnch.contains(Enchantment.silkTouch.effectId)) {
 					return true;
 				}
-			} else if(a.getItem() instanceof ItemSword) {
+				checkDamage = false;
+			}
+			if(a.getItem() instanceof ItemSword) {
 				if(aEnch.isEmpty() && bEnch.isEmpty()) {
 					return true;
 				}
@@ -116,6 +118,7 @@ public class ItemGroup implements Comparable<ItemGroup> {
 						&& bEnch.contains(Enchantment.looting.effectId)) {
 					return true;
 				}
+				checkDamage = false;
 			}
 			if(a.getItem().isDamageable() || a.getItem() instanceof ItemArmor) {
 				checkDamage = false;

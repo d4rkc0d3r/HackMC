@@ -42,7 +42,7 @@ public class Permission {
 	static public final int REMOTE = 1000;
 	static public final int LOCALE = 9999;
 	static public final int ALL = Integer.MAX_VALUE;
-	public static final String NO_PERMISSION = ChatColor.DARK_RED + "You don't have permission.";
+	static public final String NO_PERMISSION = ChatColor.DARK_RED + "You don't have permission.";
 
 	static public int DEFAULT = INFO;
 }

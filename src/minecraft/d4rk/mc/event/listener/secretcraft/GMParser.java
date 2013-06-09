@@ -20,7 +20,7 @@ public class GMParser implements EventListener {
 		try {
 			int index = str.indexOf(": ");
 			PlayerString player = new PlayerString(str.substring(0, index));
-			if(player.getRank().equals("null"))
+			if(player.getRank().equals("null") || player.getName().contains(" "))
 				return null;
 			return new GlobalMessageEvent(player, str.substring(index + 2, str.length()));
 		} catch (Exception e) {

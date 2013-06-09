@@ -51,6 +51,6 @@ public class Options extends Config {
 		if (!keyBind.isEmpty())
 			KeyMakro.load(keyBind);
 
-		ImproveChat.addToChatGui("Loaded " + getString("configName"));
+		ImproveChat.addToChatGui("Loaded " + name.substring(name.lastIndexOf('/') + 1));
 	}
 }

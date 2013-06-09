@@ -6,12 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class Config {
 	protected String name = ""; 
 
-	protected HashMap<String, String> cache = new HashMap<String, String>();
+	protected Map<String, String> cache = new HashMap<String, String>();
 	
 	public Config() {}
 	
