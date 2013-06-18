@@ -1,20 +1,17 @@
 package d4rk.mc.inventory;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import net.minecraft.src.Block;
-import net.minecraft.src.BlockCrops;
-import net.minecraft.src.BlockGravel;
 import net.minecraft.src.Enchantment;
 import net.minecraft.src.EnchantmentHelper;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ItemTool;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.Packet101CloseWindow;
+
 import d4rk.mc.BlockWrapper;
 import d4rk.mc.ChatColor;
 import d4rk.mc.PlayerWrapper;
@@ -127,19 +124,19 @@ public class SelectBestToolForBlock extends Operation {
 		}
 		
 		// it is in the hotbar
-		if(currentSlotId > hotbarStartOffset) {
+		if(currentSlotId >= hotbarStartOffset) {
 			pWrap.player.inventory.currentItem = currentSlotId - hotbarStartOffset;
 			return;
 		}
 
-		pWrap.swapInInventory(currentSlotId, currentHeldItemSlotId);
+		swapInInventory(currentSlotId, currentHeldItemSlotId);
 	}
 
 	/**
 	 * There are more blocks affected by fortune than in this list, but it is
 	 * not worth to harvest them always with it.
 	 */
-	public static Set<Integer> shouldUseFortuneList = new HashSet();
+	public static Set<Integer> shouldUseFortuneList = new TreeSet();
 	
 	static {
 		shouldUseFortuneList.add(Block.oreCoal.blockID);
@@ -148,6 +145,7 @@ public class SelectBestToolForBlock extends Operation {
 		shouldUseFortuneList.add(Block.oreLapis.blockID);
 		shouldUseFortuneList.add(Block.oreRedstone.blockID);
 		shouldUseFortuneList.add(Block.oreRedstoneGlowing.blockID);
+		shouldUseFortuneList.add(Block.oreNetherQuartz.blockID);
 		
 		shouldUseFortuneList.add(Block.carrot.blockID);
 		shouldUseFortuneList.add(Block.potato.blockID);

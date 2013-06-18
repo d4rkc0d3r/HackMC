@@ -13,7 +13,7 @@ import d4rk.mc.inventory.ItemCompare;
 import d4rk.mc.inventory.SelectBestToolForBlock;
 
 public class AutoTool implements EventListener {
-	private ItemStack lastSelection = null;
+	private int lastSelection = -1;
 	private int ticksToRevert = -1;
 	private boolean isPaused = false;
 	private boolean isMining = false;
@@ -27,10 +27,7 @@ public class AutoTool implements EventListener {
 			if(ticksToRevert > 0) {
 				--ticksToRevert;
 			} else if(ticksToRevert == 0) {
-				if(!ItemCompare.equals(lastSelection, Hack.getPlayerWrapper().getCurrentItem())
-						&& lastSelection != null) {
-					Hack.getPlayerWrapper().selectItem(lastSelection.getItem());
-				}
+				Hack.getPlayerWrapper().player.inventory.currentItem = Math.max(0, lastSelection);
 				ticksToRevert = -1;
 			}
 		}
@@ -62,7 +59,7 @@ public class AutoTool implements EventListener {
 			return;
 		}
 		if(ticksToRevert == -1) {
-			lastSelection = Hack.getPlayerWrapper().getCurrentItem();
+			lastSelection = Hack.getPlayerWrapper().player.inventory.currentItem;
 		}
 		isMining = true;
 		ticksToRevert = 10;
