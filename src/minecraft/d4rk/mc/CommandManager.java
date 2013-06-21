@@ -22,6 +22,7 @@ import net.minecraft.src.Chunk;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.Potion;
 import net.minecraft.src.PotionEffect;
 
 public class CommandManager {
@@ -42,9 +43,30 @@ public class CommandManager {
 			ImproveChat.sendMessage(sender, "Current Client TPS: "+ round(20000.0D/Hack.last20Ticks.getSum(), 2));
 			return true;
 		}
-		if(cmd.equals("/nightvision") && Permission.has(sender, rank, Permission.LOCALE)) {
+		if(cmd.startsWith("/nightvision") && Permission.has(sender, rank, Permission.LOCALE)) {
+			String[] split = cmd.split(" ");
+			int duration = 120000;
+			try {
+				int modifier;
+				switch(split[1].charAt(split[1].length() - 1)) {
+				case 't': modifier = 1; break;
+				case 's': modifier = 20; break;
+				case 'm': modifier = 20 * 60; break;
+				case 'h': modifier = 20 * 60 * 60; break;
+				default:
+					modifier = 20 * 60;
+					split[1] = split[1].substring(0, split[1].length() - 1);
+					break;
+				}
+				int input = Integer.valueOf(split[1]);
+				duration = (input < 0) ? 120000 : 1 + input * modifier;
+			} catch(Exception e) {}
 			EntityPlayer p = Hack.pWrap.player;
-			p.addPotionEffect(new PotionEffect(16, 1 + 20 * 60 * 5));
+			if(p.getActivePotionEffect(Potion.nightVision) == null) {
+				p.addPotionEffect(new PotionEffect(Potion.nightVision.id, duration));
+			} else {
+				p.removePotionEffectClient(Potion.nightVision.id);
+			}
 			return true;
 		}
 		if(cmd.startsWith("/sort chest") && Permission.has(sender, rank, Permission.LOCALE)) {

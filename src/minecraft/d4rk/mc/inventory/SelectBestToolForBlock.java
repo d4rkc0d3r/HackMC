@@ -16,10 +16,6 @@ import d4rk.mc.BlockWrapper;
 import d4rk.mc.ChatColor;
 import d4rk.mc.PlayerWrapper;
 
-/**
- * Doesn't work properly with items in the inventory. Everything is fine with
- * items in the hotbar.
- */
 public class SelectBestToolForBlock extends Operation {
 	private BlockWrapper block;
 	
@@ -48,15 +44,12 @@ public class SelectBestToolForBlock extends Operation {
 		}
 		
 		List<ItemStack> inv = pWrap.player.inventoryContainer.getInventory();
-		int invStartOffset = 9;
 		List<Integer> slotsToCheck = new ArrayList();
+		int invStartOffset = 9;
 		
 		boolean hasFortune = false;
 		
-		/*
-		 * Remove the '+ 27' if you fix the swapping of items.
-		 */
-		for(int i = invStartOffset + 27; i < inv.size(); ++i) {
+		for(int i = invStartOffset; i < inv.size(); ++i) {
 			ItemStack itemStack = inv.get(i);
 			if(itemStack != null) {
 				Item item = itemStack.getItem();
@@ -128,7 +121,17 @@ public class SelectBestToolForBlock extends Operation {
 			pWrap.player.inventory.currentItem = currentSlotId - hotbarStartOffset;
 			return;
 		}
-
+		
+		if(inv.get(currentHeldItemSlotId) != null) {
+			for(int i = hotbarStartOffset; i < 9 + hotbarStartOffset; ++i) {
+				if(inv.get(i) == null) {
+					currentHeldItemSlotId = i;
+					pWrap.player.inventory.currentItem = i - hotbarStartOffset;
+					break;
+				}
+			}
+		}
+		
 		swapInInventory(currentSlotId, currentHeldItemSlotId);
 	}
 

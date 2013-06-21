@@ -15,9 +15,8 @@ import net.minecraft.src.Vec3;
 public class PlayerAIAutoMine extends PlayerAI {
 	private int ticksToRefocus = 0;
 	private int ticksToStart = 5;
+	protected double height;
 	protected Entity item = null;
-	protected Vec3D to = new Vec3D();
-	protected Vec3D from = new Vec3D();
 	protected Vec3D pos = null;
 	protected Vec3D last = new Vec3D();
 	protected Vec3D next = new Vec3D();
@@ -57,6 +56,7 @@ public class PlayerAIAutoMine extends PlayerAI {
 		blockHelper = new PlayerAiBlockHelper();
 		invHelper = new PlayerAiInventoryHelper();
 		ticksToStart = 5;
+		height = Hack.mc.thePlayer.posY;
 	}
 	
 	private void getDir() {
@@ -81,25 +81,23 @@ public class PlayerAIAutoMine extends PlayerAI {
 	
 	private void getNextBlock() {
 		if(pos == null) pos = new Vec3D(player);
+		pos.y = height;
 		last = next;
 		if(side == POSX) {
 			next = blockHelper.getNearestBlock(pos, new Vec3D(1,-1,-1), new Vec3D(3,1,1));
 			if(next == null) pos.x++;
-		}
-		else if(side == NEGX) {
+		} else if(side == NEGX) {
 			next = blockHelper.getNearestBlock(pos, new Vec3D(-1,-1,-1), new Vec3D(-3,1,1));
 			if(next == null) pos.x--;
-		}
-		else if(side == POSZ) {
+		} else if(side == POSZ) {
 			next = blockHelper.getNearestBlock(pos, new Vec3D(-1,-1,1), new Vec3D(1,1,3));
 			if(next == null) pos.z++;
-		}
-		else if(side == NEGZ) {
+		} else if(side == NEGZ) {
 			next = blockHelper.getNearestBlock(pos, new Vec3D(-1,-1,-1), new Vec3D(1,1,-3));
 			if(next == null) pos.z--;
-		}
-		else
+		} else {
 			next = null;
+		}
 		if(next != null) {
 			Vec3D t = pos.clone();
 			pos = new Vec3D(t.getX()+0.5,t.y,t.getZ()+0.5);
@@ -151,14 +149,17 @@ public class PlayerAIAutoMine extends PlayerAI {
 	}
 	
 	private void placeCobbleOnSide(int s) {
+		Vec3D v = new Vec3D(Hack.mc.thePlayer);
+		v.y = height - 2.5;
+		BlockWrapper block = new BlockWrapper(v, Hack.mc.theWorld);
+		placeCobbleOnSide(block, s);
+	}
+	
+	private void placeCobbleOnSide(BlockWrapper block, int s) {
 		if(!player.onGround)
 			return;
 		if(!invHelper.select(new int[] {Block.cobblestone.blockID, Block.dirt.blockID, Block.netherrack.blockID}))
 			return;
-		Vec3D v = new Vec3D(Hack.mc.thePlayer);
-		v.y-=2.5;
-		BlockWrapper block = new BlockWrapper(v, Hack.mc.theWorld);
-		//player.motionX=0;player.motionY=0;player.motionZ=0;
 		this.lookAtPosition(block.getSideCoords(s), 180);
 		Vec3D off = block.getSideOffset(s);
 		player.swingItem();
@@ -179,19 +180,24 @@ public class PlayerAIAutoMine extends PlayerAI {
 				moveHelper.addVelocity(new Vec3D(item).sub(new Vec3D(Hack.mc.thePlayer)));
 			}
 			Vec3D v = new Vec3D(Hack.mc.thePlayer);
-			v.y-=2.5;
+			v.y = height - 2.5;
 			BlockWrapper block = new BlockWrapper(v, Hack.mc.theWorld);
 			if(block.getRelative(1, 0, 0).isReplaceable()) {
 				placeCobbleOnSide(NEGX);
-			}
-			else if(block.getRelative(-1, 0, 0).isReplaceable()) {
+			} else if(block.getRelative(-1, 0, 0).isReplaceable()) {
 				placeCobbleOnSide(POSX);
-			}
-			else if(block.getRelative(0, 0, 1).isReplaceable()) {
+			} else if(block.getRelative(0, 0, 1).isReplaceable()) {
 				placeCobbleOnSide(NEGZ);
-			}
-			else if(block.getRelative(0, 0, -1).isReplaceable()) {
+			} else if(block.getRelative(0, 0, -1).isReplaceable()) {
 				placeCobbleOnSide(POSZ);
+			} else if(block.getRelative(1, 0, 1).isReplaceable()) {
+				placeCobbleOnSide(block.getRelative(1, 0, 0), NEGZ);
+			} else if(block.getRelative(1, 0, -1).isReplaceable()) {
+				placeCobbleOnSide(block.getRelative(1, 0, 0), POSZ);
+			} else if(block.getRelative(-1, 0, 1).isReplaceable()) {
+				placeCobbleOnSide(block.getRelative(-1, 0, 0), NEGZ);
+			} else if(block.getRelative(-1, 0, -1).isReplaceable()) {
+				placeCobbleOnSide(block.getRelative(-1, 0, 0), POSZ);
 			}
 		}
 		Hack.mc.mcProfiler.endSection();
