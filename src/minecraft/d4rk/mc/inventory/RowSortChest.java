@@ -1,12 +1,9 @@
 package d4rk.mc.inventory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import net.minecraft.src.ItemStack;
-
-import d4rk.mc.ImproveChat;
 import d4rk.mc.PlayerWrapper;
 
 public class RowSortChest extends GroupSortChest {
