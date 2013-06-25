@@ -128,9 +128,8 @@ public class Hack {
 			try {
 				activeAI = new QuarryAI(getPlayerWrapper(), block);
 				activeAI.start();
-				addChatMessage("Initialized quarry");
-			}
-			catch(QuarryException e) {
+				mc.thePlayer.addChatMessage("Initialized quarry");
+			} catch(QuarryException e) {
 				mc.thePlayer.addChatMessage(new String(e.getMessage()));
 			}
 			return true;

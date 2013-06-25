@@ -1,10 +1,19 @@
 package net.minecraft.src;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
+
 import org.lwjgl.opengl.GL11;
+
 import d4rk.mc.ChatColor;
 import d4rk.mc.WGRegion;
 
@@ -199,6 +208,8 @@ public class GuiNewChat extends Gui
             func_96132_b();
             return;
         }
+        
+        this.logToFile(par1Str);
 
         this.func_96129_a(par1Str, par2, this.mc.ingameGUI.getUpdateCounter(), false);
         this.mc.getLogAgent().logInfo("[CHAT] " + par1Str);
@@ -471,10 +482,28 @@ public class GuiNewChat extends Gui
     private static boolean isRegionOwnerActivityCheckActivated = false;
     private static WGRegion region = new WGRegion();
 
-    public static void regionOwnerActivityCheck()
-    {
+    public static void regionOwnerActivityCheck() {
         Minecraft.getMinecraft().thePlayer.sendChatMessage("/region info");
         isRegionOwnerActivityCheckActivated = true;
         region = new WGRegion();
+    }
+	
+	private String getCurrentDateAndTime() {
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd-hh:mm:ss");
+	    return sdf.format(Calendar.getInstance().getTime());
+	}
+    
+    private void logToFile(String msg) {
+    	String str = ChatColor.remove(msg);
+		try {
+			Writer output = new BufferedWriter(new FileWriter(Minecraft.getMinecraftDir().getPath() + "/chat.log", true));
+			output.append(getCurrentDateAndTime() + " " + str + "\r\n");
+			output.close();
+			output = new BufferedWriter(new FileWriter(Minecraft.getMinecraftDir().getPath() + "/chat.color.log", true));
+			output.append(getCurrentDateAndTime() + " " + msg + "\r\n");
+			output.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
     }
 }

@@ -66,7 +66,7 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 	@Override
 	public void initGui() {
 		for(int i = 0; i < (overlays[0].size() + overlays[1].size() + overlays[2].size()); ++i) {
-			buttonList.add(new GuiButton(i * 2, 0, i * 21, 20, 20, "V"));
+			buttonList.add(new GuiToggleButton(i * 2, 0, i * 21, 20, 20, "V"));
 			buttonList.add(new GuiButton(i * 2 + 1, 21, i * 21, 20, 20, "S"));
 			textFieldList.add(new GuiNoHoverButton(-1, 0, 0, 120, 20, "NULL"));
 		}
@@ -79,11 +79,7 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
             int index = getIndexFromButtonId(btn.id);
 			BasicGuiOverlay ov = overlays[list].get(index);
 			if (btn.id % 2 == 0) {
-				if(ov == null) {
-					btn.displayString = ((btn.displayString.startsWith(ChatColor.DARK_GREEN.toString()))
-							? ChatColor.DARK_RED : ChatColor.DARK_GREEN)
-							+ btn.displayString.substring(btn.displayString.length() - 1);
-				} else {
+				if(ov != null) {
 					ov.setVisible(!ov.isVisible());
 				}
 			} else {
@@ -120,8 +116,7 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 	            }
 				BasicGuiOverlay ov = overlays[list].get(index);
 				if(ov != null && (i % 2 == 0)) {
-					btn.displayString = ((ov.isVisible()) ? ChatColor.DARK_GREEN : ChatColor.DARK_RED)
-							+ btn.displayString.substring(btn.displayString.length() - 1);
+					((GuiToggleButton)btn).setState(ov.isVisible());
 				}
 				btn.drawButton(this.mc, par1, par2);
 			}

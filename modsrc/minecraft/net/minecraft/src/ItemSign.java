@@ -1,12 +1,9 @@
 package net.minecraft.src;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
-import d4rk.mc.Hack;
-import d4rk.mc.util.UniquePacket;
 import net.minecraft.client.Minecraft;
+import d4rk.mc.util.UniquePacket;
 
 public class ItemSign extends Item
 {
@@ -79,6 +76,7 @@ public class ItemSign extends Item
         }
         else
         {
+        	int x = par4, y = par5, z = par6;
             if (par7 == 1)
             {
                 ++par5;
@@ -129,7 +127,9 @@ public class ItemSign extends Item
 
                 if (var12 != null)
                 {
-                    if (par2EntityPlayer.isSneaking() && (System.currentTimeMillis() - lastSend) > 40)
+					if (par2EntityPlayer.isSneaking()
+							&& (System.currentTimeMillis() - lastSend) > 40
+							&& par3World.getBlockId(x, y, z) != Block.chest.blockID)
                     {
                         this.addDelayedPacket(new Packet130UpdateSign(var12.xCoord, var12.yCoord, var12.zCoord, lastText.clone()), 10);
                         lastSend = System.currentTimeMillis();
