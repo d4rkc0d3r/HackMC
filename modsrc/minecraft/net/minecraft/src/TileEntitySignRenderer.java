@@ -1,13 +1,13 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
-
 import org.lwjgl.opengl.GL11;
 
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer
 {
+    private static final ResourceLocation field_110638_a = new ResourceLocation("textures/entity/sign.png");
+
     /** The ModelSign instance used by the TileEntitySignRenderer */
-    private ModelSign modelSign = new ModelSign();
+    private final ModelSign modelSign = new ModelSign();
 
     public void renderTileEntitySignAt(TileEntitySign par1TileEntitySign, double par2, double par4, double par6, float par8)
     {
@@ -49,7 +49,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer
             this.modelSign.signStick.showModel = false;
         }
 
-        this.bindTextureByName("/item/sign.png");
+        this.func_110628_a(field_110638_a);
         GL11.glPushMatrix();
         GL11.glScalef(var10, -var10, -var10);
         this.modelSign.renderSign();

@@ -17,7 +17,7 @@ import d4rk.mc.event.listener.InventoryHelper;
 import d4rk.mc.gui.overlay.OreLevelIndicator;
 import d4rk.mc.inventory.FillChest;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiTextField;

@@ -33,7 +33,7 @@ import d4rk.mc.util.RingNumber;
 import d4rk.mc.util.UniquePacket;
 import d4rk.mc.util.Vec3D;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityClientPlayerMP;
@@ -55,7 +55,7 @@ public class Hack {
 	static public Minecraft mc = null;
 	static public PlayerControllerMP PCMP = null;
 	
-	static public Options cfg = new Options();
+	static public Options cfg = null;
 
 	static public int antiAFKtime = 20 * 60 * 7; // 7 minutes
 	static private int antiAFKticks = antiAFKtime;
@@ -83,10 +83,9 @@ public class Hack {
 		this.mc = mc;
 		this.PCMP = mc.playerController;
 		this.hack = this;
+		this.cfg = new Options();
 		Permission.reload();
 		KeyMakro.load("default");
-		ImproveChat.setMSGFormat("[? -> mir] ");
-		ImproveChat.setSendFormat("[mir -> ?] ");
 		EventManager.loadBasicListeners();
 	}
 	
@@ -300,12 +299,14 @@ public class Hack {
 	}
 	
 	static public String getMCDir() {
-		return mc.getMinecraftDir().getPath();
+		return mc
+				.mcDataDir
+				.getPath();
 	}
 	
 	static public String getPlayerName() {
 		try {
-			return mc.session.username;
+			return mc.func_110432_I().func_111285_a();
 		} catch(NullPointerException e) {
 			return "null";
 		}

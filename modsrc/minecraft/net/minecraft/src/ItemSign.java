@@ -2,7 +2,6 @@ package net.minecraft.src;
 
 import java.util.HashMap;
 
-import net.minecraft.client.Minecraft;
 import d4rk.mc.util.UniquePacket;
 
 public class ItemSign extends Item

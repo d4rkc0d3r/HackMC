@@ -3,18 +3,30 @@ package d4rk.mc;
 import d4rk.mc.util.Vec3D;
 import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityZombie;
 import net.minecraft.src.Material;
 import net.minecraft.src.PathEntity;
+import net.minecraft.src.PathNavigate;
 import net.minecraft.src.PathPoint;
 import net.minecraft.src.StatList;
 
 public class MoveHelper {
 	protected EntityPlayer player;
 	protected PathEntity path = null;
+	protected EntityLiving zombie = null;
 	
 	public MoveHelper(EntityPlayer player) {
 		this.player = player;
+	}
+	
+	public PathNavigate getNavigator() {
+		if(zombie != null && player != null) {
+			zombie = new EntityZombie(player.worldObj);
+		}
+		zombie.setPosition(player.posX, player.posY, player.posZ);
+		return zombie.getNavigator();
 	}
 	
 	/**
@@ -141,7 +153,7 @@ public class MoveHelper {
 	 * @return <code>true</code> if a path was found, <code>false</code> otherwise.
 	 */
 	public boolean findPath(Vec3D pos) {
-		path = player.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z);
+		path = getNavigator().getPathToXYZ(pos.x, pos.y, pos.z);
 		if(path != null) {
 			if(path.getCurrentPathLength() > 1) {
 				path.setCurrentPathIndex(1);

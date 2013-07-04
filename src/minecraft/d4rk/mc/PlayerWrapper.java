@@ -10,7 +10,8 @@ import d4rk.mc.inventory.SelectBestToolForBlock;
 import d4rk.mc.util.Vec2D;
 import d4rk.mc.util.Vec3D;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.EntitySenses;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.Entity;
@@ -263,7 +264,7 @@ public class PlayerWrapper {
 	}
 
 	public boolean canSee(Entity e) {
-		return e == null ? false : player.getEntitySenses().canSee(e);
+		return e == null ? false : player.canEntityBeSeen(e);
 	}
 	
 	public boolean canMoveTo(Entity target) {
@@ -271,11 +272,11 @@ public class PlayerWrapper {
 	}
 	
 	public boolean canMoveTo(Vec3D pos) {
-		return player.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
+		return moveHelper.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
 	}
 	
 	public boolean canMoveTo(BlockWrapper pos) {
-		return player.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
+		return moveHelper.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
 	}
 	
 	public boolean canReach() {
@@ -617,14 +618,14 @@ public class PlayerWrapper {
 	
 	public boolean isMob(Entity e) {
 		if((e instanceof EntityMob) || (e instanceof EntitySlime) || (e instanceof EntityGhast))
-			return (!e.isDead && ((EntityLiving)e).getHealth()>0);
+			return (!e.isDead && ((EntityLiving)e).func_110143_aJ()>0);
 		return false;
 	}
 	
 	public boolean isAnimal(Entity e) {
 		if((e instanceof EntitySheep)||(e instanceof EntityChicken)||(e instanceof EntityPig)
 		 ||(e instanceof EntityCow)||(e instanceof EntitySquid))
-			return (!e.isDead && ((EntityLiving)e).getHealth()>0);
+			return (!e.isDead && ((EntityLiving)e).func_110143_aJ()>0);
 		return false;
 	}
 	

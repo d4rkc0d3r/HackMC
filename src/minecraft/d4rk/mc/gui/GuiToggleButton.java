@@ -1,7 +1,7 @@
 package d4rk.mc.gui;
 
 import d4rk.mc.ChatColor;
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.GuiButton;
 
 public class GuiToggleButton extends GuiButton {

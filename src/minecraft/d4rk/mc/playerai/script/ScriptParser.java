@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import d4rk.mc.Hack;
 import d4rk.mc.PlayerWrapper;
 

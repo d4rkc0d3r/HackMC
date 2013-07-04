@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import d4rk.mc.util.Vec3D;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;

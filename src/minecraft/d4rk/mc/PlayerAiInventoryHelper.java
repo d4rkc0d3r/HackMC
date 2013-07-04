@@ -1,6 +1,6 @@
 package d4rk.mc;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;

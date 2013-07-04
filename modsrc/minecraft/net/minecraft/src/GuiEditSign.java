@@ -20,7 +20,7 @@ public class GuiEditSign extends GuiScreen
     private int updateCounter;
 
     /** The number of the line that is being edited. */
-    private int editLine = 0;
+    private int editLine;
 
     /** "Done" button for the GUI. */
     private GuiButton doneBtn;

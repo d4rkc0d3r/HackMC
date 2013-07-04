@@ -1,6 +1,6 @@
 package d4rk.mc.inventory;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet101CloseWindow;
 import d4rk.mc.Hack;
 import d4rk.mc.PlayerWrapper;

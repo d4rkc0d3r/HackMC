@@ -15,7 +15,7 @@ import d4rk.mc.inventory.Withdraw;
 import d4rk.mc.playerai.ScriptAI;
 import d4rk.mc.util.Vec3D;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockSilverfish;
 import net.minecraft.src.Chunk;
@@ -169,7 +169,7 @@ public class CommandManager {
 			return true;
 		}
 		if(cmd.startsWith("/status") && Permission.has(sender, rank, Permission.PLAYERINFO)) {
-			String msg = "Health: " + Hack.mc.thePlayer.getHealth() + " | Pos: (" + 
+			String msg = "Health: " + Hack.mc.thePlayer.func_110143_aJ() + " | Pos: (" + 
 					 (int)Math.floor(Hack.mc.thePlayer.posX) + " | " +
 					 (int)Math.floor(Hack.mc.thePlayer.posY) + " | " +
 					 (int)Math.floor(Hack.mc.thePlayer.posZ) + ")";

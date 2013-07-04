@@ -8,13 +8,14 @@ import d4rk.mc.inventory.RowSortChest;
 
 public class GuiChest extends GuiContainer
 {
+    private static final ResourceLocation field_110421_t = new ResourceLocation("textures/gui/container/generic_54.png");
     private IInventory upperChestInventory;
     private IInventory lowerChestInventory;
 
     /**
      * window height is calculated with this values, the more rows, the heigher
      */
-    private int inventoryRows = 0;
+    private int inventoryRows;
 
     public GuiChest(IInventory par1IInventory, IInventory par2IInventory)
     {
@@ -127,8 +128,8 @@ public class GuiChest extends GuiContainer
      */
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        this.fontRenderer.drawString(this.lowerChestInventory.isInvNameLocalized() ? this.lowerChestInventory.getInvName() : StatCollector.translateToLocal(this.lowerChestInventory.getInvName()), 8, 6, 4210752);
-        this.fontRenderer.drawString(this.upperChestInventory.isInvNameLocalized() ? this.upperChestInventory.getInvName() : StatCollector.translateToLocal(this.upperChestInventory.getInvName()), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(this.lowerChestInventory.isInvNameLocalized() ? this.lowerChestInventory.getInvName() : I18n.func_135053_a(this.lowerChestInventory.getInvName()), 8, 6, 4210752);
+        this.fontRenderer.drawString(this.upperChestInventory.isInvNameLocalized() ? this.upperChestInventory.getInvName() : I18n.func_135053_a(this.upperChestInventory.getInvName()), 8, this.ySize - 96 + 2, 4210752);
     }
 
     /**
@@ -137,7 +138,7 @@ public class GuiChest extends GuiContainer
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture("/gui/container.png");
+        this.mc.func_110434_K().func_110577_a(field_110421_t);
         int var4 = (this.width - this.xSize) / 2;
         int var5 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var4, var5, 0, 0, this.xSize, this.inventoryRows * 18 + 17);

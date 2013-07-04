@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-
-import net.minecraft.client.Minecraft;
-
 import org.lwjgl.opengl.GL11;
 
 import d4rk.mc.ChatColor;
@@ -28,8 +25,8 @@ public class GuiNewChat extends Gui
     /** Chat lines to be displayed in the chat box */
     private final List chatLines = new ArrayList();
     private final List field_96134_d = new ArrayList();
-    private int field_73768_d = 0;
-    private boolean field_73769_e = false;
+    private int field_73768_d;
+    private boolean field_73769_e;
 
     public GuiNewChat(Minecraft par1Minecraft)
     {
@@ -163,7 +160,7 @@ public class GuiNewChat extends Gui
     public void printChatMessageWithOptionalDeletion(String par1Str, int par2)
     {
         // coloring the player name in light purple
-        par1Str = ChatColor.formatSubstring(par1Str, mc.session.username, ChatColor.LIGHT_PURPLE);
+        par1Str = ChatColor.formatSubstring(par1Str, mc.func_110432_I().func_111285_a(), ChatColor.LIGHT_PURPLE);
         boolean isAdded = false;
 
         if (antispam)
@@ -212,7 +209,7 @@ public class GuiNewChat extends Gui
         this.logToFile(par1Str);
 
         this.func_96129_a(par1Str, par2, this.mc.ingameGUI.getUpdateCounter(), false);
-        this.mc.getLogAgent().logInfo("[CHAT] " + par1Str);
+        this.mc.getLogAgent().logInfo("[CHAT] " + EnumChatFormatting.func_110646_a(par1Str));
     }
 
     private void func_96129_a(String par1Str, int par2, int par3, boolean par4)
@@ -396,7 +393,7 @@ public class GuiNewChat extends Gui
      */
     public void addTranslatedMessage(String par1Str, Object ... par2ArrayOfObj)
     {
-        this.printChatMessage(StringTranslate.getInstance().translateKeyFormat(par1Str, par2ArrayOfObj));
+        this.printChatMessage(I18n.func_135052_a(par1Str, par2ArrayOfObj));
     }
 
     /**
@@ -496,10 +493,10 @@ public class GuiNewChat extends Gui
     private void logToFile(String msg) {
     	String str = ChatColor.remove(msg);
 		try {
-			Writer output = new BufferedWriter(new FileWriter(Minecraft.getMinecraftDir().getPath() + "/chat.log", true));
+			Writer output = new BufferedWriter(new FileWriter(Minecraft.getMinecraft().mcDataDir.getPath() + "/chat.log", true));
 			output.append(getCurrentDateAndTime() + " " + str + "\r\n");
 			output.close();
-			output = new BufferedWriter(new FileWriter(Minecraft.getMinecraftDir().getPath() + "/chat.color.log", true));
+			output = new BufferedWriter(new FileWriter(Minecraft.getMinecraft().mcDataDir.getPath() + "/chat.color.log", true));
 			output.append(getCurrentDateAndTime() + " " + msg + "\r\n");
 			output.close();
 		} catch (IOException ex) {

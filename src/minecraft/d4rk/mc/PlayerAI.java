@@ -167,14 +167,14 @@ public class PlayerAI {
 	
 	public boolean isMob(Entity e) {
 		if((e instanceof EntityMob) || (e instanceof EntitySlime) || (e instanceof EntityGhast))
-			return (!e.isDead && ((EntityLiving)e).getHealth()>0);
+			return (!e.isDead && ((EntityLiving)e).func_110143_aJ()>0);
 		return false;
 	}
 	
 	public boolean isAnimal(Entity e) {
 		if((e instanceof EntitySheep)||(e instanceof EntityChicken)||(e instanceof EntityPig)
 		 ||(e instanceof EntityCow)||(e instanceof EntitySquid))
-			return (!e.isDead && ((EntityLiving)e).getHealth()>0);
+			return (!e.isDead && ((EntityLiving)e).func_110143_aJ()>0);
 		return false;
 	}
 	

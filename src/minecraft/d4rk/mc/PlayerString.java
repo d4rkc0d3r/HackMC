@@ -78,12 +78,9 @@ public class PlayerString {
 		try {
 			PlayerString p = (PlayerString) obj;
 			return toString.equals(p.toString);
-		} catch(Exception e) {}
-		try {
-			EntityPlayer p = (EntityPlayer) obj;
-			return name.equals(p.username);
-		} catch(Exception e) {}
-		return false;
+		} catch(Exception e) {
+			return false;
+		}
 	}
 	
 	@Override

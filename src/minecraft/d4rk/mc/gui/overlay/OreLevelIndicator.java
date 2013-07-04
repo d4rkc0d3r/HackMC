@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;

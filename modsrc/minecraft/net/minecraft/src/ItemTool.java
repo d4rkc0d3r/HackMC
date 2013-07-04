@@ -4,8 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import d4rk.mc.AnimalCount;
+
+import com.google.common.collect.Multimap;
 
 public class ItemTool extends Item
 {
@@ -14,12 +16,12 @@ public class ItemTool extends Item
     protected float efficiencyOnProperMaterial = 4.0F;
 
     /** Damage versus entities. */
-    private int damageVsEntity;
+    private float damageVsEntity;
 
     /** The material this tool is made from. */
     protected EnumToolMaterial toolMaterial;
 
-    protected ItemTool(int par1, int par2, EnumToolMaterial par3EnumToolMaterial, Block[] par4ArrayOfBlock)
+    protected ItemTool(int par1, float par2, EnumToolMaterial par3EnumToolMaterial, Block[] par4ArrayOfBlock)
     {
         super(par1);
         this.toolMaterial = par3EnumToolMaterial;
@@ -52,28 +54,20 @@ public class ItemTool extends Item
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
      */
-    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase)
     {
-        par1ItemStack.damageItem(2, par3EntityLiving);
+        par1ItemStack.damageItem(2, par3EntityLivingBase);
         return true;
     }
 
-    public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int par3, int par4, int par5, int par6, EntityLiving par7EntityLiving)
+    public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase)
     {
         if ((double)Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
-            par1ItemStack.damageItem(1, par7EntityLiving);
+            par1ItemStack.damageItem(1, par7EntityLivingBase);
         }
 
         return true;
-    }
-
-    /**
-     * Returns the damage against a given entity.
-     */
-    public int getDamageVsEntity(Entity par1Entity)
-    {
-        return this.damageVsEntity;
     }
 
     /**
@@ -106,6 +100,13 @@ public class ItemTool extends Item
     public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
     {
         return this.toolMaterial.getToolCraftingMaterial() == par2ItemStack.itemID ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+    }
+
+    public Multimap func_111205_h()
+    {
+        Multimap var1 = super.func_111205_h();
+        var1.put(SharedMonsterAttributes.field_111264_e.func_111108_a(), new AttributeModifier(field_111210_e, "Tool modifier", (double)this.damageVsEntity, 0));
+        return var1;
     }
 
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)

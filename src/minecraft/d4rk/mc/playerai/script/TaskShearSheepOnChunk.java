@@ -3,7 +3,7 @@ package d4rk.mc.playerai.script;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.EntitySheep;
 import net.minecraft.src.Item;

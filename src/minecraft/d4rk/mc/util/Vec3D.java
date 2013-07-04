@@ -66,7 +66,7 @@ public class Vec3D {
 		z=e.posZ;
 	}
 	
-	public Vec3D(EntityLiving src, Entity target) {
+	public Vec3D(Entity src, Entity target) {
 		x = target.posX - src.posX;
 		y = (target.posY-target.ySize) - (src.posY-src.ySize);
 		z = target.posZ - src.posZ;

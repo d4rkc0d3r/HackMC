@@ -32,7 +32,7 @@ public class PlayerAIMobHunter extends PlayerAI {
 		if(nearestItem == null)
 			moveHelper.clearPath();
 		if(target != null)
-			if(target.getHealth()==0) {
+			if(target.func_110143_aJ()==0) {
 				target = null;
 				ticksToRefocus = 0;
 				ticksToFindPath = 0;

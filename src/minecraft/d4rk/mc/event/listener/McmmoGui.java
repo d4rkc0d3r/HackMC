@@ -3,7 +3,7 @@ package d4rk.mc.event.listener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Packet14BlockDig;
 

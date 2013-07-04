@@ -616,16 +616,16 @@ public abstract class BlockFluid extends Block
     {
         if (this.blockMaterial == Material.lava)
         {
-            this.theIcon = new Icon[] {par1IconRegister.registerIcon("lava"), par1IconRegister.registerIcon("lava_flow")};
+            this.theIcon = new Icon[] {par1IconRegister.registerIcon("lava_still"), par1IconRegister.registerIcon("lava_flow")};
         }
         else
         {
-            this.theIcon = new Icon[] {par1IconRegister.registerIcon("water"), par1IconRegister.registerIcon("water_flow")};
+            this.theIcon = new Icon[] {par1IconRegister.registerIcon("water_still"), par1IconRegister.registerIcon("water_flow")};
         }
     }
 
     public static Icon func_94424_b(String par0Str)
     {
-        return par0Str == "water" ? Block.waterMoving.theIcon[0] : (par0Str == "water_flow" ? Block.waterMoving.theIcon[1] : (par0Str == "lava" ? Block.lavaMoving.theIcon[0] : (par0Str == "lava_flow" ? Block.lavaMoving.theIcon[1] : null)));
+        return par0Str == "water_still" ? Block.waterMoving.theIcon[0] : (par0Str == "water_flow" ? Block.waterMoving.theIcon[1] : (par0Str == "lava_still" ? Block.lavaMoving.theIcon[0] : (par0Str == "lava_flow" ? Block.lavaMoving.theIcon[1] : null)));
     }
 }

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.crypto.SecretKey;
+import net.minecraft.server.MinecraftServer;
 
 public class TcpConnection implements INetworkManager
 {
@@ -101,19 +102,10 @@ public class TcpConnection implements INetworkManager
     {
         this.sendQueueLock = new Object();
         this.isRunning = true;
-        this.isTerminating = false;
         this.readPackets = Collections.synchronizedList(new ArrayList());
         this.dataPackets = Collections.synchronizedList(new ArrayList());
         this.chunkDataPackets = Collections.synchronizedList(new ArrayList());
-        this.isServerTerminating = false;
         this.terminationReason = "";
-        this.field_74490_x = 0;
-        this.sendQueueByteLength = 0;
-        this.field_74468_e = 0;
-        this.isInputBeingDecrypted = false;
-        this.isOutputEncrypted = false;
-        this.sharedKeyForEncryption = null;
-        this.field_74463_A = null;
         this.chunkDataPacketsDelay = 50;
         this.field_74463_A = par5PrivateKey;
         this.networkSocket = par2Socket;
@@ -185,7 +177,7 @@ public class TcpConnection implements INetworkManager
             int var10001;
             int[] var10000;
 
-            if (this.field_74468_e == 0 || !this.dataPackets.isEmpty() && System.currentTimeMillis() - ((Packet)this.dataPackets.get(0)).creationTimeMillis >= (long)this.field_74468_e)
+            if (this.field_74468_e == 0 || !this.dataPackets.isEmpty() && MinecraftServer.func_130071_aq() - ((Packet)this.dataPackets.get(0)).creationTimeMillis >= (long)this.field_74468_e)
             {
                 var2 = this.func_74460_a(false);
 
@@ -210,7 +202,7 @@ public class TcpConnection implements INetworkManager
                 }
             }
 
-            if (this.chunkDataPacketsDelay-- <= 0 && (this.field_74468_e == 0 || !this.chunkDataPackets.isEmpty() && System.currentTimeMillis() - ((Packet)this.chunkDataPackets.get(0)).creationTimeMillis >= (long)this.field_74468_e))
+            if (this.chunkDataPacketsDelay-- <= 0 && (this.field_74468_e == 0 || !this.chunkDataPackets.isEmpty() && MinecraftServer.func_130071_aq() - ((Packet)this.chunkDataPackets.get(0)).creationTimeMillis >= (long)this.field_74468_e))
             {
                 var2 = this.func_74460_a(true);
 

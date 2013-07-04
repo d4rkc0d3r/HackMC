@@ -1,7 +1,7 @@
 package d4rk.mc;
 
 import d4rk.mc.util.Vec3D;
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.Vec3;

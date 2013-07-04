@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import d4rk.mc.Hack;
 import d4rk.mc.PlayerWrapper;
 
