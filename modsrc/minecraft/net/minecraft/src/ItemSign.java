@@ -128,7 +128,8 @@ public class ItemSign extends Item
                 {
 					if (par2EntityPlayer.isSneaking()
 							&& (System.currentTimeMillis() - lastSend) > 40
-							&& par3World.getBlockId(x, y, z) != Block.chest.blockID)
+							&& par3World.getBlockId(x, y, z) != Block.chest.blockID
+						    && par3World.getBlockId(x, y, z) != Block.chestTrapped.blockID)
                     {
                         this.addDelayedPacket(new Packet130UpdateSign(var12.xCoord, var12.yCoord, var12.zCoord, lastText.clone()), 10);
                         lastSend = System.currentTimeMillis();

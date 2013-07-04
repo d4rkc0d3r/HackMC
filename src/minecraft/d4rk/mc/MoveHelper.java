@@ -15,18 +15,9 @@ import net.minecraft.src.StatList;
 public class MoveHelper {
 	protected EntityPlayer player;
 	protected PathEntity path = null;
-	protected EntityLiving zombie = null;
 	
 	public MoveHelper(EntityPlayer player) {
 		this.player = player;
-	}
-	
-	public PathNavigate getNavigator() {
-		if(zombie != null && player != null) {
-			zombie = new EntityZombie(player.worldObj);
-		}
-		zombie.setPosition(player.posX, player.posY, player.posZ);
-		return zombie.getNavigator();
 	}
 	
 	/**
@@ -78,17 +69,19 @@ public class MoveHelper {
 	}
 	
 	protected void jumpInDirection(Vec3D vec) {
-		if(vec.x>0)
-			if((player.posX-Math.floor(player.posX))>0.5)
+		if (vec.y < 0.05)
+			return;
+		if (vec.x > 0)
+			if ((player.posX - Math.floor(player.posX)) > 0.5)
 				jump();
-		if(vec.x<0)
-			if((player.posX-Math.floor(player.posX))<0.5)
+		if (vec.x < 0)
+			if ((player.posX - Math.floor(player.posX)) < 0.5)
 				jump();
-		if(vec.z>0)
-			if((player.posZ-Math.floor(player.posZ))>0.5)
+		if (vec.z > 0)
+			if ((player.posZ - Math.floor(player.posZ)) > 0.5)
 				jump();
-		if(vec.z<0)
-			if((player.posZ-Math.floor(player.posZ))<0.5)
+		if (vec.z < 0)
+			if ((player.posZ - Math.floor(player.posZ)) < 0.5)
 				jump();
 	}
 	
@@ -114,7 +107,7 @@ public class MoveHelper {
 		BlockWrapper bz = new BlockWrapper(pos).getRelative(0, 0, Z);
 		if(X != 0) {
 			double stepHeight = bx.getStepHeight(player);
-			if(stepHeight > 0.5 && stepHeight < 1.1) {
+			if(stepHeight > 0.5 && stepHeight < 1.3) {
 				jumpInDirection(vec);
 			} else if(stepHeight < -10) {
 				capX(vec);
@@ -122,7 +115,7 @@ public class MoveHelper {
 		}
 		if(Z != 0) {
 			double stepHeight = bz.getStepHeight(player);
-			if(stepHeight > 0.5 && stepHeight < 1.1) {
+			if(stepHeight > 0.5 && stepHeight < 1.3) {
 				jumpInDirection(vec);
 			} else if(stepHeight < -10) {
 				capZ(vec);
@@ -153,11 +146,14 @@ public class MoveHelper {
 	 * @return <code>true</code> if a path was found, <code>false</code> otherwise.
 	 */
 	public boolean findPath(Vec3D pos) {
-		path = getNavigator().getPathToXYZ(pos.x, pos.y, pos.z);
+		path = player.worldObj.getEntityPathToXYZ(player, pos.getX(), pos.getY(), pos.getZ(), 50F, true, false, false, true);
 		if(path != null) {
+			player.addChatMessage("Path with length " + path.getCurrentPathLength() + " found.");
 			if(path.getCurrentPathLength() > 1) {
 				path.setCurrentPathIndex(1);
 			}
+		} else {
+			player.addChatMessage("No path was found.");
 		}
 		return hasPath();
 	}
@@ -169,10 +165,13 @@ public class MoveHelper {
 		if(path == null) return true;
 		PathPoint p = path.getPathPointFromIndex(path.getCurrentPathIndex());
 		//player.worldObj.setBlock(p.xCoord, p.yCoord-1, p.zCoord, Block.glass.blockID);
-		if(tryMoveTo(p.xCoord,p.yCoord,p.zCoord)) {
+		boolean arrivedAtPoint = tryMoveTo(p.xCoord, p.yCoord, p.zCoord);
+		if(arrivedAtPoint) {
 			path.incrementPathIndex();
 			if(path.getCurrentPathIndex()>=path.getCurrentPathLength()) {
 				this.clearPath();
+				player.motionX *= 0.5;
+				player.motionZ *= 0.5;
 				return true;
 			}
 		}

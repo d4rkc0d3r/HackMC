@@ -11,7 +11,7 @@ public abstract class Shop {
 	protected String itemName;
 	protected String toString = null;
 	
-	public Shop() {
+	protected Shop() {
 		
 	}
 	

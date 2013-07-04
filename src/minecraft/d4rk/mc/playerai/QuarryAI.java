@@ -89,14 +89,14 @@ public class QuarryAI extends BaseAI {
 			int playerY = pWrap.getPosition().getY();
 			BlockWrapper[] stair = quarry.calculateStaircaise();
 			for(BlockWrapper step : stair) {
-				if(step.y < playerY - 4) {
+				if(step.y < playerY - 6) {
 					startScript("nolog: pathto " + step.getPositionString());
 					return;
 				}
 			}
 		} else {
-			startScript("nolog: pathto " + current.getPositionString() + " 3.8",
-					"nolog: mineblock " + current.getString());
+			startScript(//"nolog: pathto " + current.getPositionString() + " 3.8",
+					"nolog: pmineblock " + current.getString() + " 2.5");
 		}
 	}
 }

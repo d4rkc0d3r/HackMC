@@ -272,11 +272,11 @@ public class PlayerWrapper {
 	}
 	
 	public boolean canMoveTo(Vec3D pos) {
-		return moveHelper.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
+		return new MoveHelper(player).findPath(pos);
 	}
 	
 	public boolean canMoveTo(BlockWrapper pos) {
-		return moveHelper.getNavigator().getPathToXYZ(pos.x, pos.y, pos.z) == null ? false : true;
+		return new MoveHelper(player).findPath(pos.getPosition());
 	}
 	
 	public boolean canReach() {
@@ -309,7 +309,7 @@ public class PlayerWrapper {
 	}
 	
 	/**
-	 * Selects a block and a side for the function startMining()
+	 * Selects a block and a side for the function {@link #startMining}
 	 */
 	public void selectBlock(BlockWrapper block, int side) {
 		this.stopMining();
@@ -319,7 +319,7 @@ public class PlayerWrapper {
 	}
 	
 	/**
-	 * Selects a block and the nearest side for the function startMining()
+	 * Selects a block and the nearest side for the function {@link #startMining}
 	 */
 	public void selectBlock(BlockWrapper block) {
 		this.selectBlock(block, block.getNearestSide(this.getPosition()));
@@ -348,7 +348,7 @@ public class PlayerWrapper {
 	}
 	
 	/**
-	 * Updates the bot mining progress. Also calls startMining by itself.
+	 * Updates the bot mining progress. Also calls {@link #startMining} by itself.
 	 */
 	public void updateMining() {
 		mc.mcProfiler.startSection("mining");

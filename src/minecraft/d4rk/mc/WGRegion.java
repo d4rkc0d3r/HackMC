@@ -51,7 +51,7 @@ public class WGRegion {
 				}
 				return true;
 			} else if (line.startsWith("Bounds: ")) {
-				String[] split = line.substring(8).replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ",").split(",");
+				String[] split = line.substring(8).replaceAll("\\(| |\\)", "").split(",");
 				lowX = Integer.valueOf(split[0]);
 				lowY = Integer.valueOf(split[1]);
 				lowZ = Integer.valueOf(split[2]);
@@ -71,9 +71,8 @@ public class WGRegion {
 	}
 	
 	public String getBounds() {
-		if (!isOk())
-			return "(?x?x?)";
-		return "(" + (highX - lowX + 1) + "x" + (highY - lowY + 1) + "x"
-				+ (highZ - lowZ + 1) + ")";
+		return (!isOk()) ? "(?x?x?)" : 
+			"(" + (highX - lowX + 1) + "x" + (highY - lowY + 1) + "x"
+			+ (highZ - lowZ + 1) + ")";
 	}
 }

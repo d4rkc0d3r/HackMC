@@ -93,6 +93,7 @@ public abstract class ScriptTask extends BaseAI {
 		new TaskWaitForMove("waitformove");
 		new TaskActivateNearestLift("usenearestlift");
 		new TaskMineBlock("mineblock");
+		new TaskPMineBlock("pmineblock");
 		new TaskPathTo("pathto");
 		new TaskDeposit("deposit");
 		new TaskSneak("sneak");

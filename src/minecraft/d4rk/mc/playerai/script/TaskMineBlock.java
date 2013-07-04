@@ -5,7 +5,7 @@ import d4rk.mc.PlayerWrapper;
 import d4rk.mc.util.Vec3D;
 
 public class TaskMineBlock extends ScriptTask {
-	private BlockWrapper target = null;
+	private BlockWrapper block = null;
 	private int side = 1;
 
 	public TaskMineBlock(String[] cmd, PlayerWrapper pWrap) {
@@ -18,29 +18,29 @@ public class TaskMineBlock extends ScriptTask {
 		side = (cmd.length > 4) ? pWrap.blockSideFromString(cmd[4]) : -1;
 		target = pWrap.getPosition(cmd[1], cmd[2], cmd[3]);
 		
-		this.target = new BlockWrapper(target, pWrap.player.worldObj);
+		this.block = new BlockWrapper(target, pWrap.player.worldObj);
 		
 		if(side == -1)
-			side = this.target.getNearestSide(pWrap.getPosition());
+			side = this.block.getNearestSide(pWrap.getPosition());
 		
-		if(!pWrap.canReach(this.target, side)) {
+		if(!pWrap.canReach(this.block, side)) {
 			this.done(OUT_OF_RANGE);
 			return;
 		}
 		
-		if(!this.target.isMineable()) {
+		if(!this.block.isMineable()) {
 			this.done(BLOCK_NOT_MINEABLE);
 			return;
 		}
 		
-		Vec3D vec = this.target.getSideCoords(side);
+		Vec3D vec = this.block.getSideCoords(side);
 		
 		this.startScript(new String[] {
 			"nolog: lookat "+vec.x+" "+vec.y+" "+vec.z,
 			"nolog: wait 1"
 		});
 		
-		pWrap.selectBlock(this.target, side);
+		pWrap.selectBlock(this.block, side);
 	}
 
 	public TaskMineBlock(String name) {
@@ -52,10 +52,10 @@ public class TaskMineBlock extends ScriptTask {
 		if(runScriptParser()) return;
 		if(isDone() || isStopped) return;
 		
-		pWrap.lookAt(target.getSideCoords(side));
-		pWrap.selectToolForBlock(target);
+		pWrap.lookAt(block.getSideCoords(side));
+		pWrap.selectToolForBlock(block);
 		
-		if(!target.isMineable()) {
+		if(!block.isMineable()) {
 			pWrap.stopMining();
 			done(NONE);
 			return;
