@@ -2,7 +2,7 @@ package d4rk.mc.event;
 
 import net.minecraft.src.Packet;
 
-public class PreProcessPacketEvent extends BaseEvent {
+public class PreProcessPacketEvent extends DisableEvent {
 	private final Packet packet;
 	private final boolean isAsync;
 	

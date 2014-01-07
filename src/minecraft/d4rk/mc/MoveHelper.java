@@ -148,7 +148,7 @@ public class MoveHelper {
 	public boolean findPath(Vec3D pos) {
 		path = player.worldObj.getEntityPathToXYZ(player, pos.getX(), pos.getY(), pos.getZ(), 50F, true, false, false, true);
 		if(path != null) {
-			player.addChatMessage("Path with length " + path.getCurrentPathLength() + " found.");
+			//player.addChatMessage("Path with length " + path.getCurrentPathLength() + " found.");
 			if(path.getCurrentPathLength() > 1) {
 				path.setCurrentPathIndex(1);
 			}

@@ -13,6 +13,7 @@ import d4rk.mc.inventory.Deposit;
 import d4rk.mc.inventory.OperationList;
 import d4rk.mc.inventory.Withdraw;
 import d4rk.mc.playerai.ScriptAI;
+import d4rk.mc.playerai.ghost.GhostPlayerManager;
 import d4rk.mc.util.Vec3D;
 
 import net.minecraft.src.Minecraft;
@@ -37,6 +38,10 @@ public class CommandManager {
 			if(args!=null) if(args.length>1) count = Integer.parseInt(args[1]);
 			String msg = "Current Server TPS: " + round(Hack.lastTPS.getAvg(count), 2);
 			ImproveChat.sendMessage(sender, msg);
+			return true;
+		}
+		if(cmd.equals("/fake") && Permission.has(sender, rank, Permission.LOCALE)) {
+			new GhostPlayerManager();
 			return true;
 		}
 		if(cmd.equals("/ctps") && Permission.has(sender, rank, Permission.LOCALE)) {

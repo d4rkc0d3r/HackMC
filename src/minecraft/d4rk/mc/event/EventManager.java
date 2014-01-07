@@ -102,6 +102,7 @@ public class EventManager {
 		registerEvents(new ParticelMarker());
 		registerEvents(new McmmoGui());
 		registerEvents(new AutoTool());
+		registerEvents(new PacketDisplay());
 	}
 
 	private static boolean isSubClassOf(Class check, Class sup) {

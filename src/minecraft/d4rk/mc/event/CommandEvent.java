@@ -3,7 +3,7 @@ package d4rk.mc.event;
 import d4rk.mc.PlayerString;
 
 
-public class CommandEvent extends DisableEvent{
+public class CommandEvent extends DisableEvent {
 	private String[] args;
 	private PlayerString sender;
 	
