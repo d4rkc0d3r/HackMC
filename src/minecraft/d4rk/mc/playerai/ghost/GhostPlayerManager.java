@@ -18,6 +18,7 @@ public class GhostPlayerManager implements EventListener {
 	private WorldClient world;
 	private EntityGhostPlayer e;
 	private Minecraft mc;
+	private int playerEntityID;
 
 	public GhostPlayerManager() {
 		mc = Minecraft.getMinecraft();
@@ -27,26 +28,25 @@ public class GhostPlayerManager implements EventListener {
 				mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 		e.rotationYawHead = mc.thePlayer.rotationYawHead;
 		world.addEntityToWorld(EntityGhostPlayer.ENTITY_ID, e);
-		e.addVelocity(1, 0, 0);
+		playerEntityID = mc.thePlayer.entityId;
 		EventManager.registerEvents(this);
 	}
 	
-	public void onPlayerAbilities(PreProcessPacketEvent event) {
-		if(!(event.getPacket() instanceof Packet202PlayerAbilities)) {
-			return;
+	public void onPreProcessPacketEvent(PreProcessPacketEvent event) {
+		if((event.getPacket() instanceof Packet202PlayerAbilities)) {
+			Packet202PlayerAbilities packet = (Packet202PlayerAbilities)event.getPacket();
+			
+			e.capabilities.isFlying = packet.getFlying();
+			e.capabilities.isCreativeMode = packet.isCreativeMode();
+			e.capabilities.disableDamage = packet.getDisableDamage();
+			e.capabilities.allowFlying = packet.getAllowFlying();
+			e.capabilities.setFlySpeed(packet.getFlySpeed());
+			e.capabilities.setPlayerWalkSpeed(packet.getWalkSpeed());
+			
+			mc.thePlayer.addChatMessage("Capabilities Packet");
+	        
+			event.setDisabled(true);
 		}
-		Packet202PlayerAbilities packet = (Packet202PlayerAbilities)event.getPacket();
-		
-		e.capabilities.isFlying = packet.getFlying();
-		e.capabilities.isCreativeMode = packet.isCreativeMode();
-		e.capabilities.disableDamage = packet.getDisableDamage();
-		e.capabilities.allowFlying = packet.getAllowFlying();
-		e.capabilities.setFlySpeed(packet.getFlySpeed());
-		e.capabilities.setPlayerWalkSpeed(packet.getWalkSpeed());
-		
-		mc.thePlayer.addChatMessage("Capabilities Packet");
-        
-		event.setDisabled(true);
 	}
 	
 	public void onCommand(CommandEvent event) {
