@@ -475,7 +475,7 @@ public class GuiNewChat extends Gui
     }
 
     public static boolean antispam = true;
-    public static int maxChatLines = 250;
+    public static int maxChatLines = 300;
     private static boolean isRegionOwnerActivityCheckActivated = false;
     private static WGRegion region = new WGRegion();
 

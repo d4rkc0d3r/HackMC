@@ -94,7 +94,7 @@ public class PacketDisplay implements EventListener {
 			return;
 		}
 		
-		if(event.getArg(1).equalsIgnoreCase("blacklist")) {
+		if(event.getArg(1).equalsIgnoreCase("blacklist") || event.getArg(1).equalsIgnoreCase("bl")) {
 			if(event.getArg(2).equalsIgnoreCase("add")) {
 				try {
 					blacklist.add(Integer.valueOf(event.getArg(3)));
@@ -102,7 +102,7 @@ public class PacketDisplay implements EventListener {
 				} catch(NumberFormatException nfe) {
 					event.getSender().sendSilent("\"" + event.getArg(3) + "\" is not a number");
 				}
-			} else if(event.getArg(2).equalsIgnoreCase("remove")) {
+			} else if(event.getArg(2).equalsIgnoreCase("remove") || event.getArg(2).equalsIgnoreCase("rm")) {
 				try {
 					blacklist.remove(Integer.valueOf(event.getArg(3)));
 					event.getSender().sendSilent("Removed " + event.getArg(3) + " from the blacklist");
@@ -123,10 +123,10 @@ public class PacketDisplay implements EventListener {
 					event.getSender().sendSilent("  Packet " + i);
 				}
 			}
-		} else if(event.getArg(1).equalsIgnoreCase("activate")) {
+		} else if(event.getArg(1).equalsIgnoreCase("activate") || event.getArg(1).equalsIgnoreCase("a")) {
 			isActive = true;
 			GuiNewChat.antispam = false;
-		} else if(event.getArg(1).equalsIgnoreCase("deactivate")) {
+		} else if(event.getArg(1).equalsIgnoreCase("deactivate") || event.getArg(1).equalsIgnoreCase("d")) {
 			isActive = false;
 			GuiNewChat.antispam = true;
 		} else {

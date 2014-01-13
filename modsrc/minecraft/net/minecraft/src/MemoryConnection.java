@@ -71,14 +71,15 @@ public class MemoryConnection implements INetworkManager
         while (var1-- >= 0 && !this.readPacketCache.isEmpty())
         {
             Packet var2 = (Packet)this.readPacketCache.remove(0);
-
-            if (d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PreProcessPacketEvent(var2, false)))
-            {
-                continue;
+            
+            if(myNetHandler instanceof NetClientHandler) {
+	            if (d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PreProcessPacketEvent(var2, false)))
+	                continue;
+	            var2.processPacket(this.myNetHandler);
+	            d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PostProcessPacketEvent(var2, false));
+            } else {
+            	var2.processPacket(this.myNetHandler);
             }
-
-            var2.processPacket(this.myNetHandler);
-            d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PostProcessPacketEvent(var2, false));
         }
 
         if (this.readPacketCache.size() > var1)
@@ -155,11 +156,14 @@ public class MemoryConnection implements INetworkManager
     {
         if (par1Packet.canProcessAsync() && this.myNetHandler.canProcessPacketsAsync())
         {
-            if (!d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PreProcessPacketEvent(par1Packet, true)))
-            {
-                par1Packet.processPacket(this.myNetHandler);
-                d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PostProcessPacketEvent(par1Packet, true));
-            }
+        	if(myNetHandler instanceof NetClientHandler) {
+	            if (!d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PreProcessPacketEvent(par1Packet, true))) {
+	                par1Packet.processPacket(this.myNetHandler);
+	                d4rk.mc.event.EventManager.fireEvent(new d4rk.mc.event.PostProcessPacketEvent(par1Packet, true));
+	            }
+        	} else {
+        		par1Packet.processPacket(this.myNetHandler);
+        	}
         }
         else
         {

@@ -17,8 +17,7 @@ import d4rk.mc.util.Pair;
  * constructor is private.
  */
 public class EventManager {
-	private EventManager() {
-	}
+	private EventManager() {}
 
 	/**
 	 * Call this method to fire an event. All of its listeners are called.
@@ -28,6 +27,8 @@ public class EventManager {
 	 * @return {@link DisableEvent#isDisabled() event.isDisabeled()}
 	 */
 	public static boolean fireEvent(BaseEvent event) {
+		if(!triggerEvents)
+			return false;
 		List<Pair<EventListener, Method>> l = map.get(event.getClass());
 		if (l == null && event instanceof DisableEvent)
 			return ((DisableEvent) event).isDisabled();
@@ -120,4 +121,5 @@ public class EventManager {
 	}
 
 	private static HashMap<Class, List<Pair<EventListener, Method>>> map = new HashMap();
+	public static boolean triggerEvents = true;
 }
