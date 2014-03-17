@@ -26,7 +26,7 @@ public class PacketDisplay implements EventListener {
 	private boolean displaySendedPackets = true;
 	private boolean displayProcessedPackets = false;
 	
-	private boolean isWhitelist = false;
+	private boolean isWhitelist = true;
 	private Set<Integer> blacklist = new TreeSet<Integer>();
 	
 	private Set<String> basePacketFieldNames = new HashSet<String>();
@@ -37,8 +37,6 @@ public class PacketDisplay implements EventListener {
 			basePacketFieldNames.add(f.getName());
 		}
 
-		blacklist.add(0);
-		blacklist.add(10);
 		blacklist.add(11);
 		blacklist.add(12);
 		blacklist.add(13);
@@ -129,6 +127,53 @@ public class PacketDisplay implements EventListener {
 		} else if(event.getArg(1).equalsIgnoreCase("deactivate") || event.getArg(1).equalsIgnoreCase("d")) {
 			isActive = false;
 			GuiNewChat.antispam = true;
+		} else if(event.getArg(1).equalsIgnoreCase("preset")) {
+			if(event.getArg(2).equalsIgnoreCase("smove")) {
+				displaySpecificPacketFields = false;
+				displayBasePacketFields = false;
+				displaySendedPackets = true;
+				displayProcessedPackets = false;
+				isWhitelist = true;
+				blacklist.clear();
+				blacklist.add(10);
+				blacklist.add(11);
+				blacklist.add(12);
+				blacklist.add(13);
+				blacklist.add(18);
+			} else if(event.getArg(2).equalsIgnoreCase("lmove")) {
+				displaySpecificPacketFields = false;
+				displayBasePacketFields = false;
+				displaySendedPackets = false;
+				displayProcessedPackets = true;
+				isWhitelist = false;
+				blacklist.clear();
+			} else if(event.getArg(2).equalsIgnoreCase("sdetail")) {
+				displaySpecificPacketFields = true;
+				displayBasePacketFields = false;
+				displaySendedPackets = true;
+				displayProcessedPackets = false;
+				isWhitelist = false;
+				blacklist.clear();
+				blacklist.add(0);
+				blacklist.add(10);
+				blacklist.add(11);
+				blacklist.add(12);
+				blacklist.add(13);
+				blacklist.add(18);
+			} else {
+				displaySpecificPacketFields = false;
+				displayBasePacketFields = false;
+				displaySendedPackets = true;
+				displayProcessedPackets = false;
+				isWhitelist = false;
+				blacklist.clear();
+				blacklist.add(0);
+				blacklist.add(10);
+				blacklist.add(11);
+				blacklist.add(12);
+				blacklist.add(13);
+				blacklist.add(18);
+			}
 		} else {
 			
 		}

@@ -1,10 +1,26 @@
 package d4rk.mc.playerai.ghost;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet10Flying;
+import net.minecraft.src.Packet11PlayerPosition;
+import net.minecraft.src.Packet12PlayerLook;
+import net.minecraft.src.Packet13PlayerLookMove;
 import net.minecraft.src.Packet202PlayerAbilities;
+import net.minecraft.src.Packet28EntityVelocity;
+import net.minecraft.src.Packet29DestroyEntity;
+import net.minecraft.src.Packet30Entity;
+import net.minecraft.src.Packet31RelEntityMove;
+import net.minecraft.src.Packet32EntityLook;
+import net.minecraft.src.Packet33RelEntityMoveLook;
+import net.minecraft.src.Packet34EntityTeleport;
+import net.minecraft.src.Packet35EntityHeadRotation;
+import net.minecraft.src.Packet38EntityStatus;
+import net.minecraft.src.Packet44UpdateAttributes;
+import net.minecraft.src.Packet8UpdateHealth;
 import net.minecraft.src.PlayerCapabilities;
 import net.minecraft.src.WorldClient;
 import d4rk.mc.Permission;
@@ -76,14 +92,116 @@ public class GhostPlayerManager implements EventListener {
 	        mc.thePlayer.sendQueue.addToSendQueue(p);
 	        
 	        event.setDisabled(true);
+		} else if((event.getPacket() instanceof Packet33RelEntityMoveLook)) {
+			Packet33RelEntityMoveLook p = (Packet33RelEntityMoveLook)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet35EntityHeadRotation)) {
+			Packet35EntityHeadRotation p = (Packet35EntityHeadRotation)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet28EntityVelocity)) {
+			Packet28EntityVelocity p = (Packet28EntityVelocity)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet31RelEntityMove)) {
+			Packet31RelEntityMove p = (Packet31RelEntityMove)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet32EntityLook)) {
+			Packet32EntityLook p = (Packet32EntityLook)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet34EntityTeleport)) {
+			Packet34EntityTeleport p = (Packet34EntityTeleport)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet38EntityStatus)) {
+			Packet38EntityStatus p = (Packet38EntityStatus)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet30Entity)) {
+			Packet30Entity p = (Packet30Entity)event.getPacket();
+			
+			if(p.entityId == mc.thePlayer.entityId) {
+				p.entityId = e.entityId;
+			}
+		} else if((event.getPacket() instanceof Packet8UpdateHealth)) {
+			Packet8UpdateHealth p = (Packet8UpdateHealth)event.getPacket();
+			
+			e.setEntityHealth(p.healthMP);
+	        e.getFoodStats().setFoodLevel(p.food);
+	        e.getFoodStats().setFoodSaturationLevel(p.foodSaturation);
+		} else if((event.getPacket() instanceof Packet44UpdateAttributes)) {
+			Packet44UpdateAttributes p = (Packet44UpdateAttributes)event.getPacket();
+			
+			// complicated way to do p.field_111005_a = e.entityId
+			// because field_111005_a is a private member...
+			if(p.func_111002_d() == mc.thePlayer.entityId) {
+				for(Field f : p.getClass().getDeclaredFields()) {
+					if(f.getType().equals(Integer.class)) {
+						f.setAccessible(true);
+						try {
+							f.setInt(p, e.entityId);
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						f.setAccessible(false);
+						break;
+					}
+				}
+			}
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	public void preSendPacketEvents(PreSendPacketEvent event) {
-		if((event.getPacket() instanceof Packet10Flying)) {
+		//if(true)return;
+		if(false)return;
+		if((event.getPacket() instanceof Packet11PlayerPosition)) {
+			Packet11PlayerPosition p = (Packet11PlayerPosition)event.getPacket();
+
+			p.onGround = e.onGround;
+			p.xPosition = e.posX;
+			p.zPosition = e.posZ;
+			p.yPosition = e.boundingBox.minY;
+			p.stance = e.posY;
+		} else if((event.getPacket() instanceof Packet12PlayerLook)) {
+			Packet12PlayerLook p = (Packet12PlayerLook)event.getPacket();
+
+			p.onGround = e.onGround;
+			p.pitch = e.rotationPitch;
+			p.yaw = e.rotationYaw;
+		} else if((event.getPacket() instanceof Packet13PlayerLookMove)) {
+			Packet13PlayerLookMove p = (Packet13PlayerLookMove)event.getPacket();
+
+			p.onGround = e.onGround;
+			p.pitch = e.rotationPitch;
+			p.yaw = e.rotationYaw;
+			p.xPosition = e.posX;
+			p.zPosition = e.posZ;
+			p.yPosition = e.boundingBox.minY;
+			p.stance = e.posY;
+		} else if((event.getPacket() instanceof Packet10Flying)) {
 			Packet10Flying p = (Packet10Flying)event.getPacket();
 			
-			//event.setDisabled(true);
+			p.onGround = e.onGround;
 		}
 	}
 	
